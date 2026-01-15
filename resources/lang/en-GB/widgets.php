@@ -29,7 +29,7 @@ return [
     'sales_minus_expenses'      => 'Incoming minus outgoing',
     'purchases_from_bills'      => 'Purchases from bills in this period',
     'other_expenses_plus_shipping' => 'Includes shipping costs',
-    'orders_in_processing_states' => 'Orders in sent, viewed, or partial status',
+    'orders_in_processing_states' => 'Orders that are being processed',
     'orders_marked_picked'      => 'Orders marked as Picked',
     'all_outgoing_expenses'     => 'All outgoing expenses in this period',
     'orders_marked_completed'   => 'Orders marked as paid (completed)',
