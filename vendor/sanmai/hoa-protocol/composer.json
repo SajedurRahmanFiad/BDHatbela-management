@@ -1,0 +1,72 @@
+{
+    "name": "sanmai/hoa-protocol",
+    "type": "library",
+    "description": "The Hoa\\Protocol library.",
+    "keywords": [
+        "library",
+        "protocol",
+        "resource",
+        "stream",
+        "wrapper"
+    ],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Ivan Enderlin"
+        },
+        {
+            "name": "Hoa community"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "hoa/consistency": "*",
+        "hoa/exception": "*"
+    },
+    "replace": {
+        "hoa/protocol": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11",
+        "friendsofphp/php-cs-fixer": "^3.84",
+        "hoa/consistency": "^2.17",
+        "hoa/exception": "^2.17",
+        "infection/infection": "^0.30.3",
+        "bamarni/composer-bin-plugin": "^1.8"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Hoa\\Protocol\\": "Source",
+            "Hoa\\Protocol\\Bin\\": "Bin"
+        },
+        "files": [
+            "Source/Wrapper.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hoa\\Protocol\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:coverage": "phpunit --coverage-html coverage",
+        "cs:check": "php-cs-fixer fix --dry-run --diff",
+        "cs:fix": "php-cs-fixer fix",
+        "phpstan": "cd vendor-bin/phpstan && vendor/bin/phpstan analyse --configuration=phpstan.neon"
+    },
+    "support": {
+        "issues": "https://github.com/sanmai/Protocol/issues"
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true,
+            "bamarni/composer-bin-plugin": true
+        }
+    }
+}

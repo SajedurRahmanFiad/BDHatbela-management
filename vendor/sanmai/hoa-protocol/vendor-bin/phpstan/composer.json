@@ -1,0 +1,6 @@
+{
+    "require": {
+        "phpstan/phpstan": "^2.1",
+        "sanmai/phpstan-rules": "^0.3.10"
+    }
+}

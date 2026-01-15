@@ -1,0 +1,23 @@
+parameters:
+    level: 0
+    paths:
+        - ../../Source
+    
+    excludePaths:
+        - ../../Source/Exception.php
+        - ../../Source/Protocol.php
+        - ../../Source/Wrapper.php
+    
+    errorFormat: raw
+    
+    stubFiles:
+        - stubs.php
+    
+    ignoreErrors:
+        - identifier: new.noConstructor
+
+services:
+    -
+        class: Sanmai\PHPStanRules\Rules\NoEmptyOnStringsRule
+        tags:
+            - phpstan.rules.rule

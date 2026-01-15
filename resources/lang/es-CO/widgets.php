@@ -1,0 +1,30 @@
+<?php
+
+return [
+
+    'receivables'               => 'Cuentas por cobrar',
+    'payables'                  => 'Cuentas por pagar',
+    'cash_flow'                 => 'Flujo de efectivo',
+    'profit_loss'               => 'Ganancias y Pérdidas',
+    'expenses_by_category'      => 'Gastos por categoría',
+    'account_balance'           => 'Saldo de la cuenta',
+    'bank_feeds'                => 'Conectar cuentas bancarias',
+    'currencies'                => 'Divisas',
+
+    'view_report'               => 'Ver informe',
+    'total_unpaid_invoices'     => 'Total de facturas no pagadas',
+    'total_unpaid_bills'        => 'Total de facturas no pagadas',
+
+    'description' => [
+        'receivables'           => 'Cantidad que aún no has recibido de tus clientes',
+        'payables'              => 'Cantidad que aún tienes que pagar a tus proveedores',
+        'cash_flow'             => 'Dinero entrando y saliendo de tu negocio',
+        'profit_loss'           => 'Ingresos y gastos, incluyendo facturas no pagadas',
+        'expenses_by_category'  => 'Gastos más altos en varias categorías',
+        'account_balance'       => 'Saldo actual de sus cuentas bancarias',
+        'bank_feeds'            => 'Importa tus transacciones a Akaunting automáticamente </br>conectando tus cuentas bancarias',
+    ],
+
+    'periods' => [
+    ],
+];
