@@ -11,7 +11,7 @@ return [
     'total_profit'              => 'Total Profit',
     'open_profit'               => 'Open Profit',
     'cash_flow'                 => 'Cash Flow',
-    'includes_draft_sent_paid'  => 'Includes on hold, processing, and completed orders',
+    'includes_draft_sent_paid'  => 'Includes all orders till now',
     'no_profit_loss'            => 'No Profit Loss',
     'income_by_category'        => 'Income By Category',
     'expenses_by_category'      => 'Expenses By Category',
