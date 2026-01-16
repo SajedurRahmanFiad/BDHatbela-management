@@ -118,26 +118,36 @@ abstract class Controller extends BaseController
             return;
         }
 
-        $status = $this->getSearchStringValue('status');
-
-        if (empty($status)) {
+        // If there is no explicit search parameter, set the default unpaid search.
+        // If the request already contains a search (e.g. a non-status filter like created_by:),
+        // do not override it. Only when a status token is present do we validate it.
+        if (! request()->has('search') || trim((string) request()->get('search')) === '') {
             $search = config('type.document.' . $this->type . '.route.params.unpaid.search');
 
             request()->offsetSet('search', $search);
             request()->offsetSet('programmatic', '1');
-        } else {
-            $unpaid    = str_replace('status:', '', config('type.document.' . $this->type . '.route.params.unpaid.search'));
-            $draft     = str_replace('status:', '', config('type.document.' . $this->type . '.route.params.draft.search'));
-            $picked    = str_replace('status:', '', config('type.document.' . $this->type . '.route.params.picked.search'));
-            $completed = str_replace('status:', '', config('type.document.' . $this->type . '.route.params.completed.search'));
-            $cancelled = str_replace('status:', '', config('type.document.' . $this->type . '.route.params.cancelled.search'));
 
-            if (in_array($status, [$unpaid, $draft, $picked, $completed, $cancelled])) {
-                return;
-            }
-
-            request()->offsetSet('list_records', 'all');
+            return;
         }
+
+        $status = $this->getSearchStringValue('status');
+
+        // If a search exists but no status token is present, preserve the user's search as-is.
+        if (empty($status)) {
+            return;
+        }
+
+        $unpaid    = str_replace('status:', '', config('type.document.' . $this->type . '.route.params.unpaid.search'));
+        $draft     = str_replace('status:', '', config('type.document.' . $this->type . '.route.params.draft.search'));
+        $picked    = str_replace('status:', '', config('type.document.' . $this->type . '.route.params.picked.search'));
+        $completed = str_replace('status:', '', config('type.document.' . $this->type . '.route.params.completed.search'));
+        $cancelled = str_replace('status:', '', config('type.document.' . $this->type . '.route.params.cancelled.search'));
+
+        if (in_array($status, [$unpaid, $draft, $picked, $completed, $cancelled])) {
+            return;
+        }
+
+        request()->offsetSet('list_records', 'all');
     }
 
     public function setActiveTabForTransactions(): void

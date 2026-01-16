@@ -23,13 +23,13 @@
                             {{ trans('general.all_type', ['type' => ($real_type === 'bill' || $real_type === 'bills') ? trans_choice('general.bills', 2) : trans_choice('dynamic.invoices', 2)]) }}
                         </x-tabs.nav>
                     @else
-                        <x-tabs.nav-link
+                        <x-tabs.nav-pin
                             id="{{ $real_type . '-all' }}"
-                            href="{{ route($routeTabDocument, ['list_records' => 'all']) }}"
-                            :active="$tabActive == $real_type . '-all'"
-                        >
-                            {{ trans('general.all_type', ['type' => ($real_type === 'bill' || $real_type === 'bills') ? trans_choice('general.bills', 2) : trans_choice('dynamic.invoices', 2)]) }}
-                        </x-tabs.nav-link>
+                            href="{{ route($routeTabDocument, $routeParamsTabAll) }}"
+                            name="{{ trans('general.all_type', ['type' => ($real_type === 'bill' || $real_type === 'bills') ? trans_choice('general.bills', 2) : trans_choice('dynamic.invoices', 2)]) }}"
+                            type="{{ $real_type }}"
+                            tab="all"
+                        />
                     @endif
 
                     @if ($tabActive == $real_type . '-draft')
@@ -40,22 +40,22 @@
                             {{ trans('documents.statuses.draft') }}
                         </x-tabs.nav>
                     @else
-                        <x-tabs.nav-link
+                        <x-tabs.nav-pin
                             id="{{ $real_type . '-draft' }}"
                             href="{{ route($routeTabDocument, $routeParamsTabDraft) }}"
-                            :active="$tabActive == $real_type . '-draft'"
-                        >
-                            {{ trans('documents.statuses.draft') }}
-                        </x-tabs.nav-link>
+                            name="{{ trans('documents.statuses.draft') }}"
+                            type="{{ $real_type }}"
+                            tab="draft"
+                        />
                     @endif
 
                     @if ($tabActive == $real_type . '-unpaid')
-                        <x-tabs.nav-pin
+                        <x-tabs.nav
                             id="{{ $real_type . '-unpaid' }}"
-                            name="{{ ($real_type === 'bill' || $real_type === 'bills') ? trans('documents.statuses.received') : trans('documents.statuses.sent') }}"
-                            type="{{ $real_type }}"
-                            tab="unpaid"
-                        />
+                            :active="$tabActive == $real_type . '-unpaid'"
+                        >
+                            {{ ($real_type === 'bill' || $real_type === 'bills') ? trans('documents.statuses.received') : trans('documents.statuses.sent') }}
+                        </x-tabs.nav>
                     @else
                         <x-tabs.nav-pin
                             id="{{ $real_type . '-unpaid' }}"
@@ -69,16 +69,16 @@
                     {{-- Picked tab --}}
                     @if ($real_type === 'invoices' || $real_type === 'invoice')
                         @if ($tabActive == $real_type . '-picked')
-                            <x-tabs.nav-pin
+                            <x-tabs.nav
                                 id="{{ $real_type . '-picked' }}"
-                                name="{{ trans('documents.statuses.picked') }}"
-                                type="{{ $real_type }}"
-                                tab="picked"
-                            />
+                                :active="$tabActive == $real_type . '-picked'"
+                            >
+                                {{ trans('documents.statuses.picked') }}
+                            </x-tabs.nav>
                         @else
                             <x-tabs.nav-pin
                                 id="{{ $real_type . '-picked' }}"
-                                href="{{ route($routeTabDocument, ['search' => 'status:picked']) }}"
+                                href="{{ route($routeTabDocument, $routeParamsTabPicked) }}"
                                 name="{{ trans('documents.statuses.picked') }}"
                                 type="{{ $real_type }}"
                                 tab="picked"
@@ -88,16 +88,16 @@
 
                     {{-- Completed tab --}}
                     @if ($tabActive == $real_type . '-completed')
-                        <x-tabs.nav-pin
+                        <x-tabs.nav
                             id="{{ $real_type . '-completed' }}"
-                            name="{{ trans('documents.statuses.paid') }}"
-                            type="{{ $real_type }}"
-                            tab="completed"
-                        />
+                            :active="$tabActive == $real_type . '-completed'"
+                        >
+                            {{ trans('documents.statuses.paid') }}
+                        </x-tabs.nav>
                     @else
                         <x-tabs.nav-pin
                             id="{{ $real_type . '-completed' }}"
-                            href="{{ route($routeTabDocument, ['search' => 'status:paid']) }}"
+                            href="{{ route($routeTabDocument, $routeParamsTabCompleted) }}"
                             name="{{ trans('documents.statuses.paid') }}"
                             type="{{ $real_type }}"
                             tab="completed"
@@ -107,16 +107,16 @@
                     {{-- Cancelled tab --}}
                     @if ($real_type === 'invoices' || $real_type === 'invoice')
                         @if ($tabActive == $real_type . '-cancelled')
-                            <x-tabs.nav-pin
+                            <x-tabs.nav
                                 id="{{ $real_type . '-cancelled' }}"
-                                name="{{ trans('documents.statuses.cancelled') }}"
-                                type="{{ $real_type }}"
-                                tab="cancelled"
-                            />
+                                :active="$tabActive == $real_type . '-cancelled'"
+                            >
+                                {{ trans('documents.statuses.cancelled') }}
+                            </x-tabs.nav>
                         @else
                             <x-tabs.nav-pin
                                 id="{{ $real_type . '-cancelled' }}"
-                                href="{{ route($routeTabDocument, ['search' => 'status:cancelled']) }}"
+                                href="{{ route($routeTabDocument, $routeParamsTabCancelled) }}"
                                 name="{{ trans('documents.statuses.cancelled') }}"
                                 type="{{ $real_type }}"
                                 tab="cancelled"

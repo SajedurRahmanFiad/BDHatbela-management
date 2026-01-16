@@ -15,29 +15,42 @@ trait SearchString
 
         $input = $input ?: request('search', '');
 
-        // $manager = $this->getSearchStringManager();
-        // $parsed = $manager->parse($input);
+        // Trim surrounding quotes if the full search string was quoted by the frontend
+        $input = trim($input);
+        if ((str_starts_with($input, '"') && str_ends_with($input, '"')) || (str_starts_with($input, "'") && str_ends_with($input, "'"))) {
+            $input = substr($input, 1, -1);
+        }
 
-        $columns = explode(' ', $input);
+        // Match patterns like key:val, key>=val, key<=val, key>val, key<val, key!=val, key=val
+        $pattern = '/(?P<key>[^\s:><!=]+)\s*(?P<op>:|>=|<=|>|<|!=|=)\s*(?P<value>"[^"]*"|\'[^\']*\'|[^\s]+)/';
 
-        foreach ($columns as $column) {
-            $variable = preg_split('/:|>?<?=/', $column);
+        preg_match_all($pattern, $input, $matches, PREG_SET_ORDER);
 
-            if (empty($variable[0]) || ($variable[0] != $name) || empty($variable[1])) {
+        $values = [];
+
+        foreach ($matches as $m) {
+            $key = $m['key'] ?? null;
+            $op = $m['op'] ?? ':';
+            $val = $m['value'] ?? '';
+
+            // Remove surrounding quotes from value
+            $val = trim($val, '"\'');
+
+            if ($key !== $name) {
                 continue;
             }
 
-            if (strpos($column, ':')) {
-                $value = $variable[1];
-
-                break;
+            if ($op === ':') {
+                // Single value operator
+                return $val;
             }
 
-            if (! is_array($value)) {
-                $value = [];
-            }
+            // Range operators / others -> collect values in array
+            $values[] = $val;
+        }
 
-            $value[] = $variable[1];
+        if (! empty($values)) {
+            return $values;
         }
 
         return $value;

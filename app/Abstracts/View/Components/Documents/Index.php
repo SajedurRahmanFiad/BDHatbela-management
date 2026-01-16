@@ -57,6 +57,18 @@ abstract class Index extends Component
     public $routeParamsTabDraft;
 
     /** @var string */
+    public $routeParamsTabPicked;
+
+    /** @var string */
+    public $routeParamsTabCompleted;
+
+    /** @var string */
+    public $routeParamsTabCancelled;
+
+    /** @var array */
+    public $routeParamsTabAll;
+
+    /** @var string */
     public $textPage;
 
     /** @var string */
@@ -306,8 +318,12 @@ abstract class Index extends Component
         $this->routeTabDocument = $this->getRouteTabDocument($type, $routeTabDocument);
         $this->routeParamsTabUnpaid = $this->getRouteParamsTabUnpaid($type, $routeParamsTabUnpaid);
         $this->routeParamsTabDraft = $this->getRouteParamsTabDraft($type, $routeParamsTabDraft);
-        $this->routeTabRecurring = $this->getRouteTabRecurring($type, $routeTabRecurring);
-        /* -- Main End -- */
+        $this->routeParamsTabPicked = $this->getRouteParamsTabPicked($type);
+        $this->routeParamsTabCompleted = $this->getRouteParamsTabCompleted($type);
+        $this->routeParamsTabCancelled = $this->getRouteParamsTabCancelled($type);
+        $this->routeParamsTabAll = ['list_records' => 'all'];
+
+        $this->mergeTabSearchParams($type);
 
         /* -- Buttons Start -- */
         $this->hideAcceptPayment = $hideAcceptPayment;
@@ -658,6 +674,39 @@ abstract class Index extends Component
         return ['search' => 'status:draft'];
     }
 
+    protected function getRouteParamsTabPicked($type)
+    {
+        $params = $this->getRouteParamsFromConfig($type, 'picked');
+
+        if (! empty($params)) {
+            return $params;
+        }
+
+        return ['search' => 'status:picked'];
+    }
+
+    protected function getRouteParamsTabCompleted($type)
+    {
+        $params = $this->getRouteParamsFromConfig($type, 'completed');
+
+        if (! empty($params)) {
+            return $params;
+        }
+
+        return ['search' => 'status:completed'];
+    }
+
+    protected function getRouteParamsTabCancelled($type)
+    {
+        $params = $this->getRouteParamsFromConfig($type, 'cancelled');
+
+        if (! empty($params)) {
+            return $params;
+        }
+
+        return ['search' => 'status:cancelled'];
+    }
+
     protected function getRouteTabRecurring($type, $routeTabDocument)
     {
         if (! empty($routeTabDocument)) {
@@ -926,5 +975,49 @@ abstract class Index extends Component
         }
 
         return 'documents.statuses.';
+    }
+
+    protected function mergeTabSearchParams($type)
+    {
+        $currentSearch = (string) request('search');
+        if (empty(trim($currentSearch))) {
+            return;
+        }
+
+        $nonStatusTokens = $this->getNonStatusTokens($currentSearch);
+
+        $tabs = ['unpaid', 'draft', 'picked', 'completed', 'cancelled'];
+        foreach ($tabs as $tab) {
+            $paramName = 'routeParamsTab' . ucfirst($tab);
+            if (isset($this->$paramName) && isset($this->$paramName['search'])) {
+                $baseSearch = $this->$paramName['search'];
+                $combined = $this->combineSearch($baseSearch, $nonStatusTokens);
+                $this->$paramName['search'] = $combined;
+            }
+        }
+    }
+
+    protected function getNonStatusTokens($search)
+    {
+        $tokens = [];
+        $pattern = '/(?P<key>[^\s:><!=]+)\s*(?P<op>:|>=|<=|>|<|!=|=)\s*(?P<value>"[^"]*"|\'[^\']*\'|[^\s]+)/';
+        if (preg_match_all($pattern, $search, $matches)) {
+            foreach ($matches['key'] as $i => $key) {
+                if ($key !== 'status') {
+                    $op = $matches['op'][$i];
+                    $value = $matches['value'][$i];
+                    $value = trim($value, '"\'');
+                    $tokens[] = $key . $op . $value;
+                }
+            }
+        }
+        return $tokens;
+    }
+
+    protected function combineSearch($base, $tokens)
+    {
+        $parts = [$base];
+        $parts = array_merge($parts, $tokens);
+        return implode(' ', $parts);
     }
 }
