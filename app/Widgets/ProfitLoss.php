@@ -4,7 +4,6 @@ namespace App\Widgets;
 
 use App\Abstracts\Widget;
 use App\Utilities\Recurring;
-use App\Models\Document\Document;
 use App\Models\Banking\Transaction;
 use Akaunting\Apexcharts\Chart;
 use App\Traits\Currencies;
@@ -82,34 +81,22 @@ class ProfitLoss extends Widget
 
     public function getIncome(): array
     {
-        // Invoices
-        $query = Document::invoice()->with('recurring', 'totals', 'transactions')->accrued();
-        $invoices = $this->applyFilters($query, ['date_field' => 'issued_at'])->get();
-        Recurring::reflect($invoices, 'issued_at');
-        $totals = $this->calculateTotals($invoices, 'issued_at');
-
         // Transactions
-        $query = Transaction::with('recurring')->income()->isNotDocument()->isNotTransfer();
+        $query = Transaction::with('recurring')->income()->isNotTransfer();
         $transactions = $this->applyFilters($query, ['date_field' => 'paid_at'])->get();
         Recurring::reflect($transactions, 'paid_at');
-        $totals = $this->calculateTotals($transactions, 'paid_at', $totals);
+        $totals = $this->calculateTotals($transactions, 'paid_at');
 
         return $totals;
     }
 
     public function getExpense(): array
     {
-        // Bills
-        $query = Document::bill()->with('recurring', 'totals', 'transactions')->accrued();
-        $bills = $this->applyFilters($query, ['date_field' => 'issued_at'])->get();
-        Recurring::reflect($bills, 'issued_at');
-        $totals = $this->calculateTotals($bills, 'issued_at');
-
         // Transactions
-        $query = Transaction::with('recurring')->expense()->isNotDocument()->isNotTransfer();
+        $query = Transaction::with('recurring')->expense()->isNotTransfer();
         $transactions = $this->applyFilters($query, ['date_field' => 'paid_at'])->get();
         Recurring::reflect($transactions, 'paid_at');
-        $totals = $this->calculateTotals($transactions, 'paid_at', $totals);
+        $totals = $this->calculateTotals($transactions, 'paid_at');
 
         return $totals;
     }
