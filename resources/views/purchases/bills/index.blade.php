@@ -13,10 +13,6 @@
         <x-documents.index.buttons type="bill" hide-accept-payment />
     </x-slot>
 
-    <x-slot name="moreButtons">
-        <x-documents.index.more-buttons type="bill" />
-    </x-slot>
-
     <x-slot name="content">
         <x-documents.index.content type="bill" :documents="$bills" :total-documents="$total_bills" :hide-summary="true" />
     </x-slot>

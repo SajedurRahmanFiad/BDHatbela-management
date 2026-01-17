@@ -201,6 +201,9 @@ abstract class Index extends Component
     /** @var string */
     public $classStatus;
 
+    /** @var string */
+    public $classCreatedBy;
+
     /** @var bool */
     public $hideContactName;
 
@@ -290,7 +293,7 @@ abstract class Index extends Component
         string $searchStringModel = '', string $bulkActionClass = '', array $bulkActions = [], array $bulkActionRouteParameters = [], string $searchRoute = '', string $classBulkAction = '',
         bool $hideDueAt = false, bool $hideIssuedAt = false, string $classDueAtAndIssueAt = '', string $textDueAt = '', string $textIssuedAt = '',
         bool $hideStartedAt = false, bool $hideEndedAt = false, string $classStartedAtAndEndedAt = '', string $textStartedAt = '', string $textEndedAt = '',
-        bool $hideStatus = false, string $classStatus = '',
+        bool $hideStatus = false, string $classStatus = '', string $classCreatedBy = '',
         bool $hideCategory = false, string $textCategory = '', bool $hideCurrency = false,
         bool $hideFrequency = false, bool $hideDuration = false, string $classFrequencyAndDuration = '',
         bool $hideContactName = false, bool $hideDocumentNumber = false, string $classContactNameAndDocumentNumber = '', string $textContactName = '', string $showContactRoute = '', string $textDocumentNumber = '',
@@ -389,6 +392,7 @@ abstract class Index extends Component
 
         $this->hideStatus = $hideStatus;
         $this->classStatus = $this->getClassStatus($type, $classStatus);
+        $this->classCreatedBy = $this->getClassCreatedBy($type, $classCreatedBy);
 
         $this->hideCategory = $hideCategory;
         $this->textCategory = $this->getTextCategory($type, $textCategory);
@@ -850,7 +854,30 @@ abstract class Index extends Component
             return $class;
         }
 
+        if ($type === 'invoice') {
+            return 'w-3/12 table-title';
+        }
+
         return 'w-3/12 table-title hidden sm:table-cell';
+    }
+
+    protected function getClassCreatedBy($type, $classCreatedBy)
+    {
+        if (! empty($classCreatedBy)) {
+            return $classCreatedBy;
+        }
+
+        $class = $this->getClassFromConfig($type, 'created_by');
+
+        if (! empty($class)) {
+            return $class;
+        }
+
+        if ($type === 'invoice') {
+            return 'hidden sm:table-cell';
+        }
+
+        return '';
     }
 
     protected function getTextCategory($type, $textCategory)

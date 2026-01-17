@@ -13,10 +13,6 @@
         <x-documents.index.buttons type="invoice-recurring" />
     </x-slot>
 
-    <x-slot name="moreButtons">
-        <x-documents.index.more-buttons type="invoice-recurring" />
-    </x-slot>
-
     <x-slot name="content">
         <x-documents.index.content type="invoice-recurring"
             page="recurring_templates"

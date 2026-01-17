@@ -10,21 +10,19 @@
         <span class="ltr:ml-2 rtl:mr-2">{{ Str::limit(setting('company.name'), 22) }}</span>
     </div>
 
-    @can('create-banking-transactions')
-        <x-dropdown id="dropdown-mobile-actions">
-            <x-slot name="trigger">
-                <span class="material-icons pointer-events-none">more_horiz</span>
-            </x-slot>
-
-            <x-dropdown.link href="{{ route('transactions.create', ['type' => 'income']) }}">
-                {{ trans('general.title.new', ['type' => trans_choice('general.incomes', 1)]) }}
-            </x-dropdown.link>
-
-            <x-dropdown.link href="{{ route('transactions.create', ['type' => 'expense']) }}" kind="primary">
-                {{ trans('general.title.new', ['type' => trans_choice('general.expenses', 1)]) }}
-            </x-dropdown.link>
-        </x-dropdown>
-    @endcan
+    @if(request()->route()->getName() == 'customers.index')
+        <x-contacts.index.more-buttons type="customer" />
+    @elseif(request()->route()->getName() == 'vendors.index')
+        <x-contacts.index.more-buttons type="vendor" />
+    @elseif(request()->route()->getName() == 'invoices.index')
+        <x-documents.index.more-buttons type="invoice" />
+    @elseif(request()->route()->getName() == 'bills.index')
+        <x-documents.index.more-buttons type="bill" />
+    @elseif(request()->route()->getName() == 'recurring-invoices.index')
+        <x-documents.index.more-buttons type="invoice-recurring" />
+    @elseif(request()->route()->getName() == 'recurring-bills.index')
+        <x-documents.index.more-buttons type="bill-recurring" />
+    @endif
 </div>
 
 @stack('menu_start')
