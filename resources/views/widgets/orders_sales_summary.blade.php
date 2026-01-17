@@ -62,7 +62,7 @@
                 <div>
                     <p class="text-sm font-medium opacity-90 mb-1">{{ trans('widgets.total_profit') }}</p>
                     <x-tooltip id="tooltip-profit-{{ $class->model->id }}" placement="top" message="{{ $total_profit_exact }}">
-                        <h3 class="text-4xl font-bold {{ $total_profit_amount >= 0 ? 'text-green-400' : 'text-red-400' }}">{{ $total_profit_for_humans }}</h3>
+                        <h3 class="text-4xl font-bold {{ $total_profit_amount >= 0 ? 'text-green-600' : 'text-red-400' }}">{{ $total_profit_for_humans }}</h3>
                     </x-tooltip>
                 </div>
                 <div class="bg-white bg-opacity-20 rounded-full p-4">
