@@ -78,7 +78,7 @@
     <!-- Second row: order counts (statuses) -->
     <div class="flex flex-col gap-6 mt-6 md:flex-row md:items-stretch">
         <!-- Total Orders Box -->
-        <div class="flex-1 min-w-0 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow duration-300">
+        <a href="{{ route('invoices.index') }}" class="flex-1 min-w-0 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow duration-300 cursor-pointer">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium opacity-90 mb-1">{{ trans('widgets.total_orders') }}</p>
@@ -91,10 +91,10 @@
             <div class="mt-4 pt-4 border-t border-white border-opacity-20">
                 <p class="text-xs opacity-75">{{ trans('widgets.includes_draft_sent_paid') }}</p>
             </div>
-        </div>
+        </a>
 
         <!-- Processing Orders -->
-        <div class="flex-1 min-w-0 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow duration-300">
+        <a href="{{ route('invoices.index', ['search' => 'status:sent,viewed,partial']) }}" class="flex-1 min-w-0 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow duration-300 cursor-pointer">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium opacity-90 mb-1">{{ trans('widgets.processing_orders') }}</p>
@@ -107,10 +107,10 @@
             <div class="mt-4 pt-4 border-t border-white border-opacity-20">
                 <p class="text-xs opacity-75">{{ trans('widgets.orders_in_processing_states') }}</p>
             </div>
-        </div>
+        </a>
 
         <!-- Picked Orders -->
-        <div class="flex-1 min-w-0 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow duration-300">
+        <a href="{{ route('invoices.index', ['search' => 'status:picked']) }}" class="flex-1 min-w-0 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow duration-300 cursor-pointer">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium opacity-90 mb-1">{{ trans('widgets.picked_orders') }}</p>
@@ -123,10 +123,10 @@
             <div class="mt-4 pt-4 border-t border-white border-opacity-20">
                 <p class="text-xs opacity-75">{{ trans('widgets.orders_marked_picked') }}</p>
             </div>
-        </div>
+        </a>
 
         <!-- Completed Orders -->
-        <div class="flex-1 min-w-0 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow duration-300">
+        <a href="{{ route('invoices.index', ['search' => 'status:paid']) }}" class="flex-1 min-w-0 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow duration-300 cursor-pointer">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium opacity-90 mb-1">{{ trans('widgets.completed_orders') }}</p>
@@ -139,7 +139,7 @@
             <div class="mt-4 pt-4 border-t border-white border-opacity-20">
                 <p class="text-xs opacity-75">{{ trans('widgets.orders_marked_completed') }}</p>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 

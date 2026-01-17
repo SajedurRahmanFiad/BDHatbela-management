@@ -166,7 +166,7 @@
                         <div class="flex items-center">
                             <x-show.status status="{{ $item->status }}" background-color="bg-{{ $item->status_label }}" text-color="text-text-{{ $item->status_label }}" />
                             @if ($item->histories->where('status', 'steadfast_sent')->first() && !in_array($item->status, ['paid', 'picked', 'cancelled']))
-                                <span class="material-icons text-green-600 ml-2" title="Added to Steadfast">local_shipping</span>
+                                <img src="{{ asset('public/img/steadfast.png') }}" alt="Steadfast" title="Added to Steadfast" class="w-5 h-5 ml-2" />
                             @endif
                         </div>
                         @stack('status_td_inside_end')
