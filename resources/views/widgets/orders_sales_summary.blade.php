@@ -57,7 +57,7 @@
         </div>
 
         <!-- Total Profit Box -->
-        <div class="flex-1 min-w-0 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow duration-300">
+        <div class="flex-1 min-w-0 bg-gray-800 rounded-2xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow duration-300 border border-gray-200">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium opacity-90 mb-1">{{ trans('widgets.total_profit') }}</p>
