@@ -11,6 +11,10 @@
         <x-contacts.index.buttons type="vendor" />
     </x-slot>
 
+    <x-slot name="moreButtons">
+        <x-contacts.index.more-buttons type="vendor" />
+    </x-slot>
+
     <x-slot name="content">
         <x-contacts.index.content type="vendor" :contacts="$vendors" show-logo :hide-summary="true" />
     </x-slot>

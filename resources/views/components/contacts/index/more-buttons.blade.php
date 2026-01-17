@@ -1,4 +1,4 @@
-<x-dropdown id="dropdown-more-actions" class="hidden xl:inline">
+<x-dropdown id="dropdown-more-actions">
     <x-slot name="trigger">
         <span class="material-icons pointer-events-none">more_horiz</span>
     </x-slot>

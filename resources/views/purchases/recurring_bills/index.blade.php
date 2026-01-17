@@ -13,6 +13,10 @@
         <x-documents.index.buttons type="bill-recurring" />
     </x-slot>
 
+    <x-slot name="moreButtons">
+        <x-documents.index.more-buttons type="bill-recurring" hide-cancelled />
+    </x-slot>
+
     <x-slot name="content">
         <x-documents.index.content type="bill-recurring"
             page="recurring_templates"

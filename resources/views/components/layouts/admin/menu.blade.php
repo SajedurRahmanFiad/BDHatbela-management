@@ -9,20 +9,6 @@
         <img src="{{ asset('public/img/akaunting-logo-green.svg') }}" class="w-8 m-auto" alt="Akaunting" />
         <span class="ltr:ml-2 rtl:mr-2">{{ Str::limit(setting('company.name'), 22) }}</span>
     </div>
-
-    @if(request()->route()->getName() == 'customers.index')
-        <x-contacts.index.more-buttons type="customer" />
-    @elseif(request()->route()->getName() == 'vendors.index')
-        <x-contacts.index.more-buttons type="vendor" />
-    @elseif(request()->route()->getName() == 'invoices.index')
-        <x-documents.index.more-buttons type="invoice" />
-    @elseif(request()->route()->getName() == 'bills.index')
-        <x-documents.index.more-buttons type="bill" />
-    @elseif(request()->route()->getName() == 'recurring-invoices.index')
-        <x-documents.index.more-buttons type="invoice-recurring" />
-    @elseif(request()->route()->getName() == 'recurring-bills.index')
-        <x-documents.index.more-buttons type="bill-recurring" />
-    @endif
 </div>
 
 @stack('menu_start')

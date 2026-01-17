@@ -11,6 +11,10 @@
         <x-contacts.index.buttons type="customer" />
     </x-slot>
 
+    <x-slot name="moreButtons">
+        <x-contacts.index.more-buttons type="customer" />
+    </x-slot>
+
     <x-slot name="content">
         <x-contacts.index.content type="customer" :contacts="$customers" :hide-summary="true" />
     </x-slot>
