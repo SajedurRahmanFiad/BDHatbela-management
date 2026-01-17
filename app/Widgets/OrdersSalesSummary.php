@@ -137,7 +137,8 @@ class OrdersSalesSummary extends Widget
             'total_expenses_exact' => $total_expenses->format(),
             'total_expenses_for_humans' => $total_expenses->formatForHumans(),
 
-'total_profit_exact' => $total_profit->format(),
+            'total_profit_amount' => $total_profit_amount,
+            'total_profit_exact' => $total_profit->format(),
             'total_profit_for_humans' => $total_profit->formatForHumans(),
 
             'period_type' => $this->period_type,
