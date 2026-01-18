@@ -17,7 +17,7 @@
             @stack('timeline_create_body_button_edit_start')
 
             @if (! $hideEdit)
-                @can($permissionUpdate)
+                @if ((auth()->check() && auth()->user()->isEmployee() && $document->created_by == auth()->user()->id && $document->status == 'draft') || auth()->user()->can($permissionUpdate))
                     @if ($document->status != 'cancelled')
                         <x-link href="{{ route($editRoute, $document->id) }}" id="show-slider-actions-edit-{{ $document->type }}" @click="e => e.target.classList.add('disabled')">
                             {{ trans('general.edit') }}
@@ -27,7 +27,7 @@
                             {{ trans('general.edit') }}
                         </x-button>
                     @endif
-                @endcan
+                @endif
             @endif
 
             @stack('timeline_create_body_button_edit_end')

@@ -496,8 +496,8 @@ trait Permissions
         // by using a middleware that permits employees or checks the permission.
         $this->middleware('permission_or_employee:create-' . $controller)->only('create', 'store', 'duplicate', 'import');
         $this->middleware('permission:read-' . $controller)->only('index', 'show', 'edit', 'export');
-        $this->middleware('permission:update-' . $controller)->only('update', 'enable', 'disable');
-        $this->middleware('permission:delete-' . $controller)->only('destroy');
+        $this->middleware('permission_or_employee:update-' . $controller)->only('update', 'enable', 'disable');
+        $this->middleware('permission_or_employee:delete-' . $controller)->only('destroy');
     }
 
     public function canAccessMenuItem($title, $permissions)

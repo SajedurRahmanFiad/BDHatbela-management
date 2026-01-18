@@ -40,7 +40,7 @@
                 @endif
             @endif
 
-            @if ($document->type == 'invoice' && $document->status == 'sent' && !$document->histories->where('status', 'steadfast_sent')->first())
+            @if ($document->type == 'invoice' && $document->status == 'sent' && !$document->histories->where('status', 'steadfast_sent')->first() && !(user() && user()->isEmployee()))
                 <x-link href="{{ route('invoices.send-to-steadfast', $document->id) }}" id="show-more-actions-send-to-steadfast-{{ $document->type }}">
                     Add to Steadfast
                 </x-link>

@@ -129,15 +129,19 @@
         @stack('delete_button_start')
 
         @if (! $hideDelete)
-            @can($permissionDelete)
-                @if ($checkReconciled)
-                    @if (! $document->reconciled)
+            @if (user() && user()->isEmployee() && ($document->created_by != user()->id || $document->status != 'draft'))
+                {{-- Hide delete for employees if not their own draft --}}
+            @else
+                @can($permissionDelete)
+                    @if ($checkReconciled)
+                        @if (! $document->reconciled)
+                            <x-delete-link :model="$document" :route="$deleteRoute" :text="$textDeleteModal" model-name="document_number" />
+                        @endif
+                    @else
                         <x-delete-link :model="$document" :route="$deleteRoute" :text="$textDeleteModal" model-name="document_number" />
                     @endif
-                @else
-                    <x-delete-link :model="$document" :route="$deleteRoute" :text="$textDeleteModal" model-name="document_number" />
-                @endif
-            @endcan
+                @endcan
+            @endif
         @endif
 
         @stack('delete_button_end')

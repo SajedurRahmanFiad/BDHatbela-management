@@ -13,10 +13,6 @@
         <x-documents.index.buttons type="invoice" />
     </x-slot>
 
-    <x-slot name="moreButtons">
-        <x-documents.index.more-buttons type="invoice" />
-    </x-slot>
-
     <x-slot name="content">
         <x-documents.index.content type="invoice" :documents="$invoices" :total-documents="$total_invoices" :hide-summary="true" />
     </x-slot>

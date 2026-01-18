@@ -1,15 +1,15 @@
 @if ($checkPermissionCreate)
-    @can($permissionCreate)
+    @if ((auth()->check() && auth()->user()->isEmployee()) || auth()->user()->can($permissionCreate))
         @if (! $hideCreate)
             <x-link href="{{ route($createRoute) }}" kind="primary" id="index-more-actions-new-{{ $type }}">
-                {{ trans('general.title.new', ['type' => trans_choice($textPage, 1)]) }}
+                New Order
             </x-link>
         @endif
-    @endcan
+    @endif
 @else
     @if (! $hideCreate)
         <x-link href="{{ route($createRoute) }}" kind="primary" id="index-more-actions-new-{{ $type }}">
-            {{ trans('general.title.new', ['type' => trans_choice($textPage, 1)]) }}
+            New Order
         </x-link>
     @endif
 @endif

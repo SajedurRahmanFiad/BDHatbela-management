@@ -11,12 +11,16 @@
 @stack('edit_button_start')
 
 @if (! in_array($document->status, $hideButtonStatuses))
-    @if (! $hideEdit)
-        @can($permissionUpdate)
-            <x-link href="{{ route($editRoute, $document->id) }}" id="show-more-actions-edit-{{ $document->type }}">
-                {{ trans('general.edit') }}
-            </x-link>
-        @endcan
+    @if (user() && user()->isEmployee() && ($document->created_by != user()->id || $document->status != 'draft'))
+        {{-- Hide edit for employees if not their own draft --}}
+    @else
+        @if (! $hideEdit)
+            @if ((auth()->check() && auth()->user()->isEmployee() && $document->created_by == auth()->user()->id && $document->status == 'draft') || auth()->user()->can($permissionUpdate))
+                <x-link href="{{ route($editRoute, $document->id) }}" id="show-more-actions-edit-{{ $document->type }}">
+                    {{ trans('general.edit') }}
+                </x-link>
+            @endif
+        @endif
     @endif
 @endif
 

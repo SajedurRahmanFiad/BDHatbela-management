@@ -565,12 +565,16 @@ class Document extends Model
 
         try {
             // Hide edit option for reconciled or paid (completed) documents
-            if (! $this->reconciled && $this->status != 'paid') {
+            $allowEdit = ! $this->reconciled && ($this->status != 'paid' || (auth()->check() && auth()->user()->isEmployee()));
+            if (auth()->check() && auth()->user()->isEmployee()) {
+                $allowEdit = $allowEdit && $this->created_by == auth()->id() && $this->status == 'draft';
+            }
+            if ($allowEdit) {
                 $actions[] = [
                     'title' => trans('general.edit'),
                     'icon' => 'edit',
                     'url' => route($prefix . '.edit', $this->id),
-                    'permission' => 'update-' . $group . '-' . $permission_prefix,
+                    'permission' => (auth()->check() && auth()->user()->isEmployee()) ? null : 'update-' . $group . '-' . $permission_prefix,
                     'attributes' => [
                         'id' => 'index-line-actions-edit-' . $this->type . '-' . $this->id,
                     ],
@@ -583,7 +587,7 @@ class Document extends Model
                 'title' => trans('general.duplicate'),
                 'icon' => 'file_copy',
                 'url' => route($prefix . '.duplicate', $this->id),
-                'permission' => 'create-' . $group . '-' . $permission_prefix,
+                'permission' => (auth()->check() && auth()->user()->isEmployee()) ? null : 'create-' . $group . '-' . $permission_prefix,
                 'attributes' => [
                     'id' => 'index-line-actions-duplicate-' . $this->type . '-' . $this->id,
                 ],
@@ -661,7 +665,7 @@ class Document extends Model
                         'title' => trans('general.share_link'),
                         'icon' => 'share',
                         'url' => route('modals.'. $prefix . '.share.create', $this->id),
-                        'permission' => 'read-' . $group . '-' . $permission_prefix,
+                        'permission' => (auth()->check() && auth()->user()->isEmployee()) ? null : 'read-' . $group . '-' . $permission_prefix,
                         'attributes' => [
                             'id' => 'index-line-actions-share-link-' . $this->type . '-'  . $this->id,
                             '@click' => 'onShareLink("' . route('modals.'. $prefix . '.share.create', $this->id) . '")',
@@ -723,18 +727,24 @@ class Document extends Model
             }
 
             try {
-                $actions[] = [
-                    'type' => 'delete',
-                    'icon' => 'delete',
-                    'title' => $translation_prefix,
-                    'route' => $prefix . '.destroy',
-                    'permission' => 'delete-' . $group . '-' . $permission_prefix,
-                    'model-name' => 'document_number',
-                    'attributes' => [
-                        'id' => 'index-line-actions-delete-' . $this->type . '-' . $this->id,
-                    ],
-                    'model' => $this,
-                ];
+                $allowDelete = true;
+                if (auth()->check() && auth()->user()->isEmployee()) {
+                    $allowDelete = $this->created_by == auth()->id() && $this->status == 'draft';
+                }
+                if ($allowDelete) {
+                    $actions[] = [
+                        'type' => 'delete',
+                        'icon' => 'delete',
+                        'title' => $translation_prefix,
+                        'route' => $prefix . '.destroy',
+                        'permission' => (auth()->check() && auth()->user()->isEmployee()) ? null : 'delete-' . $group . '-' . $permission_prefix,
+                        'model-name' => 'document_number',
+                        'attributes' => [
+                            'id' => 'index-line-actions-delete-' . $this->type . '-' . $this->id,
+                        ],
+                        'model' => $this,
+                    ];
+                }
             } catch (\Exception $e) {}
         } else {
             if ($this->recurring && $this->recurring->status != 'ended') {
@@ -750,6 +760,15 @@ class Document extends Model
                     ];
                 } catch (\Exception $e) {}
             }
+        }
+
+        if (auth()->check() && auth()->user()->isEmployee()) {
+            $actions = array_filter($actions, function($action) {
+                if (isset($action['type']) && $action['type'] == 'divider') return true;
+                if (isset($action['type']) && $action['type'] == 'delete') return true;
+                if (isset($action['icon']) && in_array($action['icon'], ['edit', 'file_copy', 'share'])) return true;
+                return false;
+            });
         }
 
         return $actions;

@@ -45,5 +45,11 @@ class DeleteDocument extends Job implements ShouldDelete
 
             throw new \Exception($message);
         }
+
+        if (auth()->check() && auth()->user()->isEmployee()) {
+            if ($this->model->created_by != auth()->id() || $this->model->status != 'draft') {
+                throw new \Exception('You can only delete your own draft invoices.');
+            }
+        }
     }
 }

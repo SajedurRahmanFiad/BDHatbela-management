@@ -21,6 +21,10 @@ class DuplicateDocument extends Job
     {
         \DB::transaction(function () {
             $this->clone = $this->model->duplicate();
+
+            // Set the created_by to the current user
+            $this->clone->created_by = auth()->id();
+            $this->clone->save();
         });
 
         event(new DocumentCreated($this->clone, request()));

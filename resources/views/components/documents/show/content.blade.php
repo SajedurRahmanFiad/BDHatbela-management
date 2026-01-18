@@ -60,7 +60,7 @@
 
         @stack('mark_picked_start')
 
-        @if (! $hideMarkPicked)
+        @if (! $hideMarkPicked && !(user() && user()->isEmployee()))
             <x-documents.show.mark-picked type="{{ $type }}" :document="$document" />
         @endif
 
@@ -76,7 +76,7 @@
 
         @stack('get_paid_start')
 
-        @if (! $hideGetPaid)
+        @if (! $hideGetPaid && !(user() && user()->isEmployee()))
             <x-documents.show.get-paid type="{{ $type }}" :document="$document" />
         @endif
 

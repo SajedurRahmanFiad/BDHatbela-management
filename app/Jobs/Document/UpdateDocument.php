@@ -18,6 +18,8 @@ class UpdateDocument extends Job implements ShouldUpdate
 
     public function handle(): Document
     {
+        $this->authorize();
+
         if (empty($this->request['amount'])) {
             $this->request['amount'] = 0;
         }
@@ -120,5 +122,17 @@ class UpdateDocument extends Job implements ShouldUpdate
         event(new DocumentUpdated($this->model, $this->request));
 
         return $this->model;
+    }
+
+    /**
+     * Determine if this action is applicable.
+     */
+    public function authorize(): void
+    {
+        if (auth()->check() && auth()->user()->isEmployee()) {
+            if ($this->model->created_by != auth()->id() || $this->model->status != 'draft') {
+                throw new \Exception('You can only edit your own draft invoices.');
+            }
+        }
     }
 }
