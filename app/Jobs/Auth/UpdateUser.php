@@ -24,7 +24,7 @@ class UpdateUser extends Job implements ShouldUpdate
 
         event(new UserUpdating($this->model, $this->request));
 
-        \\DB::transaction(function () {
+        \DB::transaction(function () {
             // Ensure employee users always use the main dashboard as their landing page.
             $roles = (array) $this->request->get('roles', []);
 
