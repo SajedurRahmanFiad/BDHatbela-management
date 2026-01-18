@@ -10,6 +10,7 @@ use App\Traits\Charts;
 use App\Traits\Currencies;
 use App\Traits\DateTime;
 use App\Utilities\Date;
+use Illuminate\Support\Facades\Cache;
 
 class CashFlow extends Widget
 {
@@ -34,14 +35,24 @@ class CashFlow extends Widget
     public function show()
     {
         $this->setFilter();
+        $cacheKey = 'widget.cash_flow.' . company_id() . '.' . $this->start_date->toDateString() . '.' . $this->end_date->toDateString() . '.' . $this->period;
 
-        $income = array_values($this->calculateTotals('income'));
-        $expense = array_values($this->calculateTotals('expense'));
-        // Calculate COGS per period (available separately; not subtracted from profit)
-        $cogs = array_values($this->calculateCogsTotals());
-        // Shipping is included in incoming totals via invoices/payments and should not be treated as outgoing
-        // (previously shipping was subtracted from expenses, causing shipping to show as outgoing)
-        $profit = array_values($this->calculateProfit($income, $expense, $cogs));
+        $data = Cache::remember($cacheKey, now()->addMinutes(5), function () {
+            $income = array_values($this->calculateTotals('income'));
+            $expense = array_values($this->calculateTotals('expense'));
+            // Calculate COGS per period (available separately; not subtracted from profit)
+            $cogs = array_values($this->calculateCogsTotals());
+            // Shipping is included in incoming totals via invoices/payments and should not be treated as outgoing
+            // (previously shipping was subtracted from expenses, causing shipping to show as outgoing)
+            $profit = array_values($this->calculateProfit($income, $expense, $cogs));
+
+            return compact('income', 'expense', 'cogs', 'profit');
+        });
+
+        $income = $data['income'];
+        $expense = $data['expense'];
+        $cogs = $data['cogs'];
+        $profit = $data['profit'];
 
         $chart = new Chart();
 

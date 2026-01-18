@@ -1485,7 +1485,6 @@ namespace App\Models\Common{
  * @method static \GeneaLabs\LaravelModelCaching\CachedBuilder|Model sortable($defaultParameters = null)
  * @method static \GeneaLabs\LaravelModelCaching\CachedBuilder|Model source($source)
  * @method static \GeneaLabs\LaravelModelCaching\CachedBuilder|Report sum($column)
- * @method static \GeneaLabs\LaravelModelCaching\CachedBuilder|Report taxSummary()
  * @method static \GeneaLabs\LaravelModelCaching\CachedBuilder|Report truncate()
  * @method static \GeneaLabs\LaravelModelCaching\CachedBuilder|Model usingSearchString(?string $string = null)
  * @method static \GeneaLabs\LaravelModelCaching\CachedBuilder|Model withCacheCooldownSeconds(?int $seconds = null)

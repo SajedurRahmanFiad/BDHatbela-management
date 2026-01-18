@@ -51,5 +51,14 @@ class App extends Provider
                 report("Attempted to lazy load [{$relation}] on model [{$class}].");
             }
         });
+
+        // Ensure Debugbar is disabled in non-debug environments even if bound
+        if (! config('app.debug') && $this->app->bound('debugbar')) {
+            try {
+                $this->app->make('debugbar')->disable();
+            } catch (\Throwable $e) {
+                // Safely ignore if debugbar cannot be disabled for any reason
+            }
+        }
     }
 }

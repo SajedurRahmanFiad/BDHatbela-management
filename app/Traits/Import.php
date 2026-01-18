@@ -168,22 +168,22 @@ trait Import
         $id = isset($row['document_id']) ? $row['document_id'] : null;
 
         if (empty($id) && !empty($row['document_number'])) {
-            $id = Document::number($row['document_number'])->pluck('id')->first();
+            $id = Document::number($row['document_number'])->value('id');
         }
 
         if (empty($id) && !empty($row['invoice_number'])) {
-            $id = Document::invoice()->number($row['invoice_number'])->pluck('id')->first();
+            $id = Document::invoice()->number($row['invoice_number'])->value('id');
         }
 
         if (empty($id) && !empty($row['bill_number'])) {
-            $id = Document::bill()->number($row['bill_number'])->pluck('id')->first();
+            $id = Document::bill()->number($row['bill_number'])->value('id');
         }
 
         if (empty($id) && !empty($row['invoice_bill_number'])) {
             if ($row['type'] == 'income') {
-                $id = Document::invoice()->number($row['invoice_bill_number'])->pluck('id')->first();
+                $id = Document::invoice()->number($row['invoice_bill_number'])->value('id');
             } else {
-                $id = Document::bill()->number($row['invoice_bill_number'])->pluck('id')->first();
+                $id = Document::bill()->number($row['invoice_bill_number'])->value('id');
             }
         }
 
@@ -199,15 +199,15 @@ trait Import
         }
 
         if (empty($id) && (!empty($row['document_number']) || !empty($row['invoice_number']) || !empty($row['bill_number']))) {
-            $id = Document::number($row['parent_number'])->pluck('id')->first();
+            $id = Document::number($row['parent_number'])->value('id');
         }
 
         if (empty($id) && isset($row['number'])) {
-            $id = Transaction::number($row['parent_number'])->pluck('id')->first();
+            $id = Transaction::number($row['parent_number'])->value('id');
         }
 
         if (empty($id) && isset($row['parent_name'])) {
-            $id = Category::type($row['type'])->withSubCategory()->where('name', $row['parent_name'])->pluck('id')->first();
+            $id = Category::type($row['type'])->withSubCategory()->where('name', $row['parent_name'])->value('id');
         }
 
         return is_null($id) ? $id : (int) $id;
@@ -257,7 +257,7 @@ trait Import
         $id = isset($row['tax_id']) ? $row['tax_id'] : null;
 
         if (empty($id) && !empty($row['tax_name'])) {
-            $id = Tax::name($row['tax_name'])->pluck('id')->first();
+            $id = Tax::name($row['tax_name'])->value('id');
         }
 
         if (empty($id) && !empty($row['tax_rate'])) {
@@ -269,7 +269,7 @@ trait Import
 
     public function getAccountIdFromCurrency($row)
     {
-        $account_id = Account::where('currency_code', $row['currency_code'])->pluck('id')->first();
+        $account_id = Account::where('currency_code', $row['currency_code'])->value('id');
 
         if (!empty($account_id)) {
             return $account_id;
@@ -296,7 +296,7 @@ trait Import
 
     public function getAccountIdFromName($row)
     {
-        $account_id = Account::where('name', $row['account_name'])->pluck('id')->first();
+        $account_id = Account::where('name', $row['account_name'])->value('id');
 
         if (!empty($account_id)) {
             return $account_id;
@@ -323,7 +323,7 @@ trait Import
 
     public function getAccountIdFromNumber($row)
     {
-        $account_id = Account::where('account_number', $row['account_number'])->pluck('id')->first();
+        $account_id = Account::where('account_number', $row['account_number'])->value('id');
 
         if (!empty($account_id)) {
             return $account_id;
@@ -350,7 +350,7 @@ trait Import
 
     public function getCategoryIdFromName($row, $type)
     {
-        $category_id = Category::type($type)->withSubCategory()->where('name', $row['category_name'])->pluck('id')->first();
+        $category_id = Category::type($type)->withSubCategory()->where('name', $row['category_name'])->value('id');
 
         if (!empty($category_id)) {
             return $category_id;
@@ -375,7 +375,7 @@ trait Import
 
     public function getContactIdFromEmail($row, $type)
     {
-        $contact_id = Contact::type($type)->where('email', $row['contact_email'])->pluck('id')->first();
+        $contact_id = Contact::type($type)->where('email', $row['contact_email'])->value('id');
 
         if (!empty($contact_id)) {
             return $contact_id;
@@ -401,7 +401,7 @@ trait Import
 
     public function getContactIdFromName($row, $type)
     {
-        $contact_id = Contact::type($type)->where('name', $row['contact_name'])->pluck('id')->first();
+        $contact_id = Contact::type($type)->where('name', $row['contact_name'])->value('id');
 
         if (!empty($contact_id)) {
             return $contact_id;
@@ -429,7 +429,7 @@ trait Import
     {
         $type = !empty($type) ? $type : (!empty($row['item_type']) ? $row['item_type'] : 'product');
 
-        $item_id = Item::type($type)->where('name', $row['item_name'])->pluck('id')->first();
+        $item_id = Item::type($type)->where('name', $row['item_name'])->value('id');
 
         if (!empty($item_id)) {
             return $item_id;
@@ -456,7 +456,7 @@ trait Import
 
     public function getTaxIdFromRate($row, $type = 'normal')
     {
-        $tax_id = Tax::type($type)->where('rate', $row['tax_rate'])->pluck('id')->first();
+        $tax_id = Tax::type($type)->where('rate', $row['tax_rate'])->value('id');
 
         if (!empty($tax_id)) {
             return $tax_id;
