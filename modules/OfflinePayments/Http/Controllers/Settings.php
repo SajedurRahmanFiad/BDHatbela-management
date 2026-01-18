@@ -109,12 +109,20 @@ class Settings extends Controller
      */
     public function destroy(DRequest $request)
     {
-        $response = $this->ajaxDispatch(new DeletePaymentMethod($request));
+        try {
+            $response = $this->ajaxDispatch(new DeletePaymentMethod($request));
 
-        if ($response['success']) {
-            $response['message'] = trans('messages.success.deleted', ['type' => $response['data']['name']]);
+            if ($response['success']) {
+                $response['message'] = trans('messages.success.deleted', ['type' => $response['data']['name']]);
+            }
+
+            return response()->json($response);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => true,
+                'message' => $e->getMessage(),
+            ], 400);
         }
-
-        return response()->json($response);
     }
 }
