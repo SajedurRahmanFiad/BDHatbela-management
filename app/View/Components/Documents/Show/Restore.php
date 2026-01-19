@@ -26,7 +26,7 @@ class Restore extends Component
     {
         $this->description = 'documents.slider.cancel';
 
-        $this->last_cancelled = $this->document->histories()->status('cancelled')->latest()->first();
+        $this->last_cancelled = $this->document->histories()->with('owner')->status('cancelled')->latest()->first();
 
         $this->user_name = ($this->last_cancelled) ? $this->last_cancelled->owner->name : trans('general.na');
 

@@ -26,7 +26,7 @@ class Receive extends Component
     {
         $this->description = $this->document->isRecurringDocument() ? 'documents.slider.create_recurring' : 'general.last_received';
 
-        $this->last_received = $this->document->histories()->status('received')->latest()->first();
+        $this->last_received = $this->document->histories()->with('owner')->status('received')->latest()->first();
 
         $this->user_name = ($this->last_received) ? $this->last_received->owner->name : trans('general.na');
 

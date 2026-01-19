@@ -28,7 +28,7 @@ class Send extends Component
     {
         $this->description = $this->document->isRecurringDocument() ? 'documents.slider.create_recurring' : 'general.last_sent';
 
-        $this->histories = $this->document->histories()->status('sent')->latest()->get();
+        $this->histories = $this->document->histories()->with('owner')->status('sent')->latest()->get();
 
         $this->last_sent = $this->histories->first();
 
