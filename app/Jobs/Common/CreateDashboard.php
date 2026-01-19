@@ -13,7 +13,6 @@ use App\Models\Common\Widget;
 use App\Utilities\Widgets;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-\nuse Illuminate\Support\Facades\DB;
 
 class CreateDashboard extends Job implements HasOwner, HasSource, ShouldCreate
 {
