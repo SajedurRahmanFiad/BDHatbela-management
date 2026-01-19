@@ -95,6 +95,17 @@ class OrdersSalesSummary extends Widget
             ->whereBetween('issued_at', [$this->start_date, $this->end_date])
             ->sum('amount');
 
+        // Total income: sum of all income transactions (non-transfer)
+        $income_transactions = Transaction::income()
+            ->whereBetween('paid_at', [$this->start_date, $this->end_date])
+            ->isNotTransfer()
+            ->get();
+
+        $total_income_amount = 0;
+        foreach ($income_transactions as $transaction) {
+            $total_income_amount += $transaction->getAmountConvertedToDefault();
+        }
+
         // Total expenses: sum of all expense transactions across all expense categories (non-transfer)
         $expense_transactions = Transaction::expense()
             ->whereBetween('paid_at', [$this->start_date, $this->end_date])
@@ -109,12 +120,13 @@ class OrdersSalesSummary extends Widget
         // Other expenses: total expenses minus purchase expenses
         $other_expenses_amount = $total_expenses_amount - $total_purchases_amount;
 
-        // Profit: total sales - total expenses
-        $total_profit_amount = $total_sales_amount - $total_expenses_amount;
+        // Profit: total income - total expenses
+        $total_profit_amount = $total_income_amount - $total_expenses_amount;
 
         // Format amounts
         $total_sales = money($total_sales_amount);
         $total_purchases = money($total_purchases_amount);
+        $total_income = money($total_income_amount);
         $other_expenses = money($other_expenses_amount);
         $total_expenses = money($total_expenses_amount);
         $total_profit = money($total_profit_amount);
@@ -130,6 +142,9 @@ class OrdersSalesSummary extends Widget
 
             'total_purchases_exact' => $total_purchases->format(),
             'total_purchases_for_humans' => $total_purchases->formatForHumans(),
+
+            'total_income_exact' => $total_income->format(),
+            'total_income_for_humans' => $total_income->formatForHumans(),
 
             'other_expenses_exact' => $other_expenses->format(),
             'other_expenses_for_humans' => $other_expenses->formatForHumans(),

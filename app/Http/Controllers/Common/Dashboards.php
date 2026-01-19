@@ -63,9 +63,10 @@ class Dashboards extends Controller
             if (user()->isEmployee()) {
                 $dashboard = $this->dispatch(new CreateDashboard([
                     'company_id' => company_id(),
-                    'name' => trans_choice('general.dashboards', 1),
+                    'name' => 'Your Dashboard',
                     'custom_widgets' => [
                         'App\\Widgets\\EmployeeInvoiceSummary' => 'widgets.employee_invoice_summary',
+                        'App\\Widgets\\EmployeeOrdersComparison' => 'widgets.employee_orders_comparison',
                     ],
                 ]));
             } else {
@@ -113,13 +114,33 @@ class Dashboards extends Controller
                     'created_by' => user()->id,
                 ]);
             }
+
+            // Ensure employee has their orders comparison widget
+            $has_comparison_widget = Widget::where('dashboard_id', $dashboard->id)
+                ->where('class', 'App\\Widgets\\EmployeeOrdersComparison')
+                ->exists();
+
+            if (!$has_comparison_widget) {
+                $max_sort = Widget::where('dashboard_id', $dashboard->id)->max('sort') ?? 0;
+                
+                Widget::create([
+                    'company_id' => company_id(),
+                    'dashboard_id' => $dashboard->id,
+                    'class' => 'App\\Widgets\\EmployeeOrdersComparison',
+                    'name' => trans('widgets.employee_orders_comparison'),
+                    'sort' => $max_sort + 1,
+                    'settings' => ['width' => '100'],
+                    'created_from' => 'employee_dashboard',
+                    'created_by' => user()->id,
+                ]);
+            }
         }
 
         session(['dashboard_id' => $dashboard->id]);
 
         $widgets = Widget::where('dashboard_id', $dashboard->id)->orderBy('sort', 'asc')->get()->filter(function ($widget) {
             // Check if the widget can be shown based on permissions
-            if (!Widgets::canShow($widget->class)) {
+            if ($widget->class != 'App\\Widgets\\EmployeeOrdersComparison' && !Widgets::canShow($widget->class)) {
                 return false;
             }
 

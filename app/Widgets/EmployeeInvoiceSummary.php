@@ -38,7 +38,7 @@ class EmployeeInvoiceSummary extends Widget
 
         $pending_invoices = Document::invoice()
             ->where('created_by', $user->id)
-            ->whereIn('status', ['draft', 'sent', 'viewed', 'partial'])
+            ->where('status', 'draft')
             ->count();
 
         $data = [
