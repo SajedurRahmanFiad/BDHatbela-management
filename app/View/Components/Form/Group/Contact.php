@@ -38,7 +38,7 @@ class Contact extends Form
         if (empty($this->contacts) && ! empty($this->options)) {
             $this->contacts = $this->options;
         } else if (empty($this->contacts)) {
-            $this->contacts = Model::type($this->type)->enabled()->orderBy('name')->take(setting('default.select_limit'))->get();
+            $this->contacts = Model::type($this->type)->enabled()->orderBy('name')->get();
         }
 
         $this->setRoutes();

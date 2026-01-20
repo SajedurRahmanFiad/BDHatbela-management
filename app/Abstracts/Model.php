@@ -129,7 +129,7 @@ abstract class Model extends Eloquent implements Ownable
     {
         event(new SearchStringApplying($query));
 
-        $string = $string ?: request('search');
+        $string = $string ?: request('search', request('q', request('query', request('term'))));
 
         $this->getSearchStringManager()->updateBuilder($query, $string);
 

@@ -69,7 +69,7 @@ class Contact extends Component
     public function render()
     {
         if (empty($this->contacts)) {
-            $this->contacts = Model::{$this->type}()->enabled()->orderBy('name')->take(setting('default.select_limit'))->get();
+            $this->contacts = Model::{$this->type}()->enabled()->orderBy('name')->get();
 
             if (!empty($this->contact) && (!$this->contacts->contains('id', $contact->id))) {
                 $this->contacts->push($this->contact);

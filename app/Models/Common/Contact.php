@@ -38,7 +38,7 @@ class Contact extends Model
      *
      * @var array
      */
-    protected $appends = ['location', 'logo', 'initials', 'has_email'];
+    protected $appends = ['location', 'logo', 'initials', 'has_email', 'display_name'];
 
     /**
      * Attributes that should be mass-assignable.
@@ -64,6 +64,18 @@ class Contact extends Model
         'enabled',
         'created_from',
         'created_by',
+    ];
+
+    /**
+     * Searchable columns.
+     *
+     * @var array
+     */
+    public $searchable = [
+        'name',
+        'email',
+        'phone',
+        'tax_number',
     ];
 
     /**
@@ -323,6 +335,17 @@ class Contact extends Model
         }
 
         return $this->getFormattedAddress($this->city, $country ?? null, $this->state, $this->zip_code);
+    }
+
+    public function getDisplayNameAttribute()
+    {
+        $display = $this->name;
+
+        if (!empty($this->phone)) {
+            $display .= ' (' . $this->phone . ')';
+        }
+
+        return $display;
     }
 
     /**

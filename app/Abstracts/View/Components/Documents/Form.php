@@ -586,9 +586,9 @@ abstract class Form extends Component
         $contact_type = $this->getTypeContact($type, null);
 
         if ($contact_type) {
-            $contacts = Contact::$contact_type()->enabled()->orderBy('name')->take(setting('default.select_limit'))->get();
+            $contacts = Contact::$contact_type()->enabled()->orderBy('name')->get();
         } else {
-            $contacts = Contact::enabled()->orderBy('name')->take(setting('default.select_limit'))->get();
+            $contacts = Contact::enabled()->orderBy('name')->get();
         }
 
         if (!empty($document) && ($document->contact && !$contacts->contains('id', $document->contact_id))) {
