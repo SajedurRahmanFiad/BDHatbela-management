@@ -339,10 +339,10 @@ class Contact extends Model
 
     public function getDisplayNameAttribute()
     {
-        $display = $this->name;
+        $display = $this->phone;
 
-        if (!empty($this->phone)) {
-            $display .= ' (' . $this->phone . ')';
+        if (!empty($this->name)) {
+            $display .= ' (' . $this->name . ')';
         }
 
         return $display;
