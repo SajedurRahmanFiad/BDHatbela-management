@@ -708,7 +708,7 @@ class Document extends Model
                 'type' => 'divider',
             ];
 
-            if (! in_array($this->status, ['cancelled', 'draft'])) {
+            if (! in_array($this->status, ['cancelled'])) {
                 try {
                     $actions[] = [
                         'title' => trans('documents.actions.cancel'),

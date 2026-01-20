@@ -110,7 +110,7 @@
 
         @stack('button_cancelled_start')
 
-        @if (! $hideCancel && ! in_array($document->status, ['cancelled', 'draft']))
+        @if (! $hideCancel && ! in_array($document->status, ['cancelled']))
             @can($permissionUpdate)
                 <x-dropdown.divider />
 
