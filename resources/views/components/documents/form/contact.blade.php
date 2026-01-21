@@ -4,8 +4,9 @@
     no-matching-data-text="{{ trans('general.no_matching_data') }}"
     search-route="{{ $searchRoute }}"
     create-route="{{ $createRoute }}"
-    :contacts="{{ json_encode($contacts) }}"
+    :contacts="{{ json_encode($dropdownContacts ?? $contacts) }}"
     :selected="{{ json_encode($contact) }}"
+    option-field="display_name"
     add-contact-text="{{ is_array($textAddContact) ? trans($textAddContact[0], ['field' => trans_choice($textAddContact[1], 1)]) : trans($textAddContact) }}"
     create-new-contact-text="{{ is_array($textCreateNewContact) ? trans($textCreateNewContact[0], ['field' => trans_choice($textCreateNewContact[1], 1)]) : trans($textCreateNewContact) }}"
     edit-contact-text="{{ is_array($textEditContact) ? trans($textEditContact[0], ['field' => trans_choice($textEditContact[1], 1)]) : trans($textEditContact) }}"
@@ -31,3 +32,23 @@
 
     @change="onChangeContactCard"
 ></akaunting-contact-card>
+
+@push('scripts_start')
+<script>
+function onChangeContactCard(contact) {
+    // Use name field directly since display_name is used for dropdown display
+    if (typeof this.form !== 'undefined') {
+        this.form.contact_id = contact.id;
+        this.form.contact_name = contact.name; // Use clean name field
+        this.form.contact_email = contact.email || '';
+        this.form.contact_has_email = !!contact.has_email;
+        this.form.contact_tax_number = contact.tax_number || '';
+        this.form.contact_phone = contact.phone || '';
+        this.form.contact_address = contact.address || '';
+        this.form.contact_country = contact.country || '';
+        this.form.contact_state = contact.state || '';
+        this.form.contact_zip_code = contact.zip_code || '';
+    }
+}
+</script>
+@endpush

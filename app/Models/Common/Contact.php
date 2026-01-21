@@ -38,7 +38,7 @@ class Contact extends Model
      *
      * @var array
      */
-    protected $appends = ['location', 'logo', 'initials', 'has_email', 'display_name'];
+    protected $appends = ['location', 'logo', 'initials', 'has_email'];
 
     /**
      * Attributes that should be mass-assignable.
@@ -337,15 +337,19 @@ class Contact extends Model
         return $this->getFormattedAddress($this->city, $country ?? null, $this->state, $this->zip_code);
     }
 
-    public function getDisplayNameAttribute()
+    /**
+     * Get the name attribute with optional phone number for contact card display.
+     *
+     * @return string
+     */
+    public function getNameAttribute($value)
     {
-        $display = $this->phone;
-
-        if (!empty($this->name)) {
-            $display .= ' (' . $this->name . ')';
+        // If this is a contact card request, include phone in display
+        if (request()->has('contact_card_display') && !empty($this->phone)) {
+            return $this->phone . ' (' . $value . ')';
         }
 
-        return $display;
+        return $value;
     }
 
     /**

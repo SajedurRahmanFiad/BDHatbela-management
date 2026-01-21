@@ -16,6 +16,8 @@ class Contact extends Component
 
     public $contacts;
 
+    public $dropdownContacts;
+
     public $searchRoute;
 
     public $createRoute;
@@ -68,13 +70,42 @@ class Contact extends Component
      */
     public function render()
     {
-        if (empty($this->contacts)) {
-            $this->contacts = Model::{$this->type}()->enabled()->orderBy('name')->get();
+        // Store original name of selected contact
+        $originalSelectedName = null;
+        if (!empty($this->contact) && $this->contact instanceof Model) {
+            $originalSelectedName = $this->contact->getOriginal('name') ?? $this->contact->name;
+        }
 
-            if (!empty($this->contact) && (!$this->contacts->contains('id', $contact->id))) {
+        if (empty($this->contacts)) {
+            // Add parameter to request to indicate contact card display
+            request()->merge(['contact_card_display' => true]);
+            $this->contacts = Model::{$this->type}()->enabled()->orderBy('name')->get();
+            // Remove the parameter after loading
+            request()->remove('contact_card_display');
+
+            if (!empty($this->contact) && (!$this->contacts->contains('id', $this->contact->id ?? null))) {
                 $this->contacts->push($this->contact);
             }
         }
+
+        // No need for dropdownContacts anymore - the model handles the display
+        $this->dropdownContacts = $this->contacts;
+
+        // Set display_name for dropdown display
+        foreach ($this->dropdownContacts as $contact) {
+            if ($contact instanceof Model) {
+                $contact->display_name = $contact->name; // This will use the modified name with phone
+            } else {
+                $contact->display_name = $contact->name ?? '';
+            }
+        }
+
+        // Ensure selected contact has clean name
+        if (!empty($this->contact) && !is_null($originalSelectedName)) {
+            $this->contact->name = $originalSelectedName;
+        }
+
+        // Don't modify the selected contact - it should show the normal name
 
         if (empty($this->searchRoute)) {
             switch ($this->type) {
