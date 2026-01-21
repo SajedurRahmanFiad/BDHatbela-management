@@ -151,16 +151,13 @@ class Users extends Controller
      */
     public function store(Request $request)
     {
-        \Log::info('User store method called', ['request' => $request->all()]);
-
         $response = $this->ajaxDispatch(new CreateUser($request));
-
-        \Log::info('User creation response', ['response' => $response]);
 
         if ($response['success']) {
             $response['redirect'] = route('users.show', $response['data']->id);
 
-            $message = trans('messages.success.invited', ['type' => trans_choice('general.users', 1)]);
+            $message_key = $request->has('password') ? 'added' : 'invited';
+            $message = trans('messages.success.' . $message_key, ['type' => trans_choice('general.users', 1)]);
 
             flash($message)->success();
         } else {
