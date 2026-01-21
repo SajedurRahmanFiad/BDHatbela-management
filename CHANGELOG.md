@@ -1,5 +1,7 @@
+- 21th January: Created Changelog for tracking updates
 - 21th January: Fixed Employee creation error
-- 20th January: Fixed customer and vendor page
-- 20th January: Fixed contact list in contact search
+- 20th January: Fixed bugs in customer and vendor page
+- 20th January: Restructured customer list items in customer search
 - 20th January: Added customer search by phone number
 - 20th January: Fixed cancel on hold button
+- 4b7be5d287870189caaf1680fba17aef1047d40c: Test changelog hook (2026-01-21 20:14:04)
