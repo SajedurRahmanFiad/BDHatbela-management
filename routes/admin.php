@@ -46,6 +46,8 @@ Route::group(['prefix' => 'common'], function () {
     Route::get('reports/fields', 'Common\Reports@fields')->name('reports.fields');
     Route::resource('reports', 'Common\Reports');
 
+    Route::get('changelog', 'Common\Changelog@index')->name('changelog.index');
+
     Route::get('contacts/index', 'Common\Contacts@index')->name('contacts.index');
 
     Route::get('plans/check', 'Common\Plans@check')->name('plans.check');

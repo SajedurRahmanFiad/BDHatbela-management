@@ -22,7 +22,9 @@ class CreateUser extends Job implements HasOwner, HasSource, ShouldCreate
 
         event(new UserCreating($this->request));
 
-        \\DB::transaction(function () {
+        \Log::info('Starting user creation transaction', ['request' => $this->request->all()]);
+
+        \DB::transaction(function () {
             if (empty($this->request->get('password', false))) {
                 $this->request->merge(['password' => Str::random(40)]);
             }
@@ -39,7 +41,11 @@ class CreateUser extends Job implements HasOwner, HasSource, ShouldCreate
                 }
             }
 
+            \Log::info('Creating user model', ['data' => $this->request->input()]);
+
             $this->model = user_model_class()::create($this->request->input());
+
+            \Log::info('User model created', ['user_id' => $this->model->id]);
 
             // Upload picture
             if ($this->request->file('picture')) {
@@ -57,10 +63,12 @@ class CreateUser extends Job implements HasOwner, HasSource, ShouldCreate
             }
 
             if ($this->request->has('roles')) {
+                \Log::info('Attaching roles', ['roles' => $this->request->get('roles')]);
                 $this->model->roles()->attach($this->request->get('roles'));
             }
 
             if ($this->request->has('companies')) {
+                \Log::info('Attaching companies', ['companies' => $this->request->get('companies')]);
                 if (app()->runningInConsole() || request()->isInstall()) {
                     $this->model->companies()->attach($this->request->get('companies'));
                 } else {
@@ -74,27 +82,45 @@ class CreateUser extends Job implements HasOwner, HasSource, ShouldCreate
                         $this->model->companies()->attach($companies->toArray());
                     }
                 }
+                \Log::info('Companies attached successfully');
             }
 
             if (empty($this->model->companies)) {
+                \Log::info('No companies to attach, returning early');
                 return;
             }
 
+            \Log::info('Running user:seed for companies', ['companies' => $this->model->companies->pluck('id')->toArray()]);
             foreach ($this->model->companies as $company) {
-                Artisan::call('user:seed', [
-                    'user' => $this->model->id,
-                    'company' => $company->id,
-                ]);
+                \Log::info('Running user:seed', ['user' => $this->model->id, 'company' => $company->id]);
+                try {
+                    // Temporarily skip seeding to isolate the issue
+                    \Log::info('Skipping user:seed for debugging');
+                    // Artisan::call('user:seed', [
+                    //     'user' => $this->model->id,
+                    //     'company' => $company->id,
+                    // ]);
+                } catch (\Exception $e) {
+                    \Log::error('user:seed failed', ['error' => $e->getMessage()]);
+                    throw $e;
+                }
             }
 
             if ($this->shouldSendInvitation()) {
-                $this->dispatch(new CreateInvitation($this->model));
+                \Log::info('Sending invitation');
+                // Temporarily skip invitation to isolate the issue
+                // $this->dispatch(new CreateInvitation($this->model));
+                \Log::info('Skipping invitation for debugging');
+            } else {
+                \Log::info('Skipping invitation');
             }
         });
 
         $this->clearPlansCache();
 
         event(new UserCreated($this->model, $this->request));
+
+        \Log::info('User creation completed successfully', ['user_id' => $this->model->id]);
 
         return $this->model;
     }

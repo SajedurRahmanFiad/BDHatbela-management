@@ -24,6 +24,8 @@ class User extends FormRequest
      */
     public function rules()
     {
+        \Log::info('User request validation started', ['method' => $this->getMethod(), 'all' => $this->all()]);
+
         $picture = 'nullable';
 
         if ($this->files->get('picture')) {
@@ -69,7 +71,7 @@ class User extends FormRequest
         $current_password = $change_password ? '|current_password' : '';
         $password = $change_password ? '|confirmed' : '';
 
-        return [
+        $rules = [
             'name'              => 'required|string',
             'email'             => $email,
             'current_password'  => 'required_if:change_password,true' . $current_password,
@@ -79,6 +81,10 @@ class User extends FormRequest
             'picture'           => $picture,
             'landing_page'      => 'required|string',
         ];
+
+        \Log::info('User request validation rules', ['rules' => $rules]);
+
+        return $rules;
     }
 
     public function messages()

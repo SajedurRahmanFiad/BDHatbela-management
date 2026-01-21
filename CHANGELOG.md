@@ -1,0 +1,5 @@
+- 63f92a4e: Nothing
+- dcfa3c47: Fixed customer and vendor page
+- 07e94297: Fixed contact list in contact search
+- 0c7d92c2: Added customer search by phone number
+- 6e79401b: Fixed cancel on hold button

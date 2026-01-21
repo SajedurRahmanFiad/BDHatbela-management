@@ -106,6 +106,12 @@ class ShowInAdmin
             $menu->route('reports.index', $title, [], 60, ['icon' => 'donut_small']);
         }
 
+        // Changelog
+        $title = 'Changelog';
+        if ($this->canAccessMenuItem($title, 'read-common-reports')) {
+            $menu->route('changelog.index', $title, [], 70, ['icon' => 'history']);
+        }
+
         // Apps
         $title = trim(trans_choice('general.modules', 2));
         if ($this->canAccessMenuItem($title, 'read-modules-home')) {

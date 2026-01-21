@@ -151,7 +151,11 @@ class Users extends Controller
      */
     public function store(Request $request)
     {
+        \Log::info('User store method called', ['request' => $request->all()]);
+
         $response = $this->ajaxDispatch(new CreateUser($request));
+
+        \Log::info('User creation response', ['response' => $response]);
 
         if ($response['success']) {
             $response['redirect'] = route('users.show', $response['data']->id);

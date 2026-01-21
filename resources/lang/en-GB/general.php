@@ -22,6 +22,7 @@ return [
     'payments'              => 'Payment|Payments',
     'recurring_transactions'=> 'Recurring Transaction|Recurring Transactions',
     'reports'               => 'Report|Reports',
+    'changelog'             => 'Changelog',
     'settings'              => 'Setting|Settings',
     'categories'            => 'Category|Categories',
     'currencies'            => 'Currency|Currencies',
