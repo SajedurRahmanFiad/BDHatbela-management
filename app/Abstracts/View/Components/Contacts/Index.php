@@ -191,6 +191,10 @@ abstract class Index extends Component
     ) {
         /* -- Main Start -- */
         $this->type = $type;
+        if ($this->type === 'customer' || $this->type === 'vendor') {
+            $hideOverdue = true;
+            $hideTaxNumber = true;
+        }
         $this->group = $this->getGroup($type, $group);
         $this->page = $this->getPage($type, $page);
         $this->contacts = ($contacts) ? $contacts : collect();
@@ -257,6 +261,18 @@ abstract class Index extends Component
         $this->classOpenAndOverdue = $this->getClassOpenAndOverdue($type, $classOpenAndOverdue);
         $this->textOpen = $this->getTextOpen($type, $textOpen);
         $this->textOverdue = $this->getTextOverdue($type, $textOverdue);
+        if ($this->type === 'customer' || $this->type === 'vendor') {
+            $this->hideOverdue = true;
+            $this->hideTaxNumber = true;
+            $this->hideEmail = true;
+            $this->hideCurrencyCode = true;
+            if ($this->type === 'customer') {
+                $this->textCountry = 'Orders';
+            } elseif ($this->type === 'vendor') {
+                $this->textCountry = 'Bills';
+                $this->showLogo = false;
+            }
+        }
         /* -- Content End -- */
 
         /* -- Empty Start -- */

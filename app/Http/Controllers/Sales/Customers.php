@@ -39,10 +39,14 @@ class Customers extends Controller
                 'invoices.media'
             ])
             ->withCount([
+                'invoices',
                 'contact_persons as contact_persons_with_email_count' => function ($query) {
                     $query->whereNotNull('email');
                 }
             ])
+            ->withSum(['invoices as paid_amount' => function ($query) {
+                $query->where('status', 'paid');
+            }], 'amount')
             ->collect();
 
         return $this->response('sales.customers.index', compact('customers'));

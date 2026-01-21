@@ -59,7 +59,11 @@ class Content extends Component
             if ($item->due_at > $today) {
                 $totals['open'] += $item->getAmountConvertedToDefault() - $transactions;
             } else {
-                $totals['overdue'] += $item->getAmountConvertedToDefault() - $transactions;
+                if ($this->type === 'customer' || $this->type === 'vendor') {
+                    $totals['open'] += $item->getAmountConvertedToDefault() - $transactions;
+                } else {
+                    $totals['overdue'] += $item->getAmountConvertedToDefault() - $transactions;
+                }
             }
         }
 
@@ -87,6 +91,9 @@ class Content extends Component
         ];
 
         $this->summary_amounts = $summary_amounts;
+
+        $this->hideOverdue = ($this->type === 'customer' || $this->type === 'vendor');
+        $this->hideUser = ($this->type === 'customer' || $this->type === 'vendor');
 
         $this->transactions = $this->paginate($this->transactions->sortByDesc('paid_at'));
         $this->documents = $this->paginate($this->documents->sortByDesc('issued_at'));

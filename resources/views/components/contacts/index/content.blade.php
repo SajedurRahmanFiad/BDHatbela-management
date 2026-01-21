@@ -81,7 +81,13 @@
                         @stack('country_th_start')
                         @if (! $hideCountry)
                         <x-slot name="first">
-                            <x-sortablelink column="country" title="{{ trans_choice($textCountry, 1) }}" />
+                            @if($type == 'customer')
+                                <x-sortablelink column="country" title="Orders" />
+                            @elseif($type == 'vendor')
+                                <x-sortablelink column="country" title="Bills" />
+                            @else
+                                <x-index.country code="{{ $item->country }}" />
+                            @endif
                         </x-slot>
                         @endif
                         @stack('country_th_end')
@@ -198,7 +204,13 @@
                             @stack('country_td_start')
                             @if (! $hideCountry)
                             <x-slot name="first">
-                                <x-index.country code="{{ $item->country }}" />
+                                @if($type == 'customer')
+                                    {{ $item->invoices_count ?? 0 }}
+                                @elseif($type == 'vendor')
+                                    {{ $item->bills_count ?? 0 }}
+                                @else
+                                    <x-index.country code="{{ $item->country }}" />
+                                @endif
                             </x-slot>
                             @endif
                             @stack('country_td_end')
@@ -220,10 +232,16 @@
                             @stack('open_td_start')
                             @if (! $hideOpen)
                             <x-slot name="first">
-                                @if ($item->open)
-                                    <x-money :amount="$item->open" />
+                                @if($type == 'customer')
+                                    <x-money :amount="$item->paid_amount ?? 0" />
+                                @elseif($type == 'vendor')
+                                    <x-money :amount="$item->paid_amount ?? 0" />
                                 @else
-                                    <x-empty-data />
+                                    @if ($item->open)
+                                        <x-money :amount="$item->open" />
+                                    @else
+                                        <x-empty-data />
+                                    @endif
                                 @endif
                             </x-slot>
                             @endif

@@ -38,10 +38,14 @@ class Vendors extends Controller
                 'bills.media'
             ])
             ->withCount([
+                'bills',
                 'contact_persons as contact_persons_with_email_count' => function ($query) {
                     $query->whereNotNull('email');
                 }
             ])
+            ->withSum(['bills as paid_amount' => function ($query) {
+                $query->where('status', 'paid');
+            }], 'amount')
             ->vendor()
             ->collect();
 

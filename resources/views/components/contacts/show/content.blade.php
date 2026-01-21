@@ -222,13 +222,7 @@
                                 <x-table.thead>
                                     <x-table.tr>
                                         <x-table.th class="w-4/12 lg:w-3/12">
-                                            <x-slot name="first">
-                                                <x-sortablelink column="due_at" title="{{ trans('invoices.due_date') }}" />
-                                            </x-slot>
-
-                                            <x-slot name="second">
-                                                <x-sortablelink column="issued_at" title="{{ trans('invoices.invoice_date') }}" />
-                                            </x-slot>
+                                            <x-sortablelink column="issued_at" title="Order Date" />
                                         </x-table.th>
 
                                         <x-table.th class="w-3/12" hidden-mobile>
@@ -236,13 +230,11 @@
                                         </x-table.th>
 
                                         <x-table.th class="w-4/12 lg:w-3/12">
-                                            <x-slot name="first">
-                                                <x-sortablelink column="contact_name" title="{{ trans_choice('general.customers', 1) }}" />
-                                            </x-slot>
-
-                                            <x-slot name="second">
-                                                <x-sortablelink column="document_number" title="{{ trans_choice('general.numbers', 1) }}" />
-                                            </x-slot>
+                                            @if($type === 'customer')
+                                                <x-sortablelink column="document_number" title="Order Number" />
+                                            @elseif($type === 'vendor')
+                                                <x-sortablelink column="document_number" title="Bill Number" />
+                                            @endif
                                         </x-table.th>
 
                                         <x-table.th class="w-4/12 lg:w-3/12" kind="amount">
@@ -256,13 +248,7 @@
                                         @php $paid = $item->paid; @endphp
                                         <x-table.tr href="{{ route(config('type.document.' . $item->type . '.route.prefix', 'invoices') . '.show', $item->id) }}">
                                             <x-table.td class="w-4/12 lg:w-3/12">
-                                                <x-slot name="first" class="font-bold truncate" override="class">
-                                                    {{ \Date::parse($item->due_at)->diffForHumans() }}
-                                                </x-slot>
-
-                                                <x-slot name="second">
-                                                    <x-date date="{{ $item->issued_at }}" />
-                                                </x-slot>
+                                                <x-date date="{{ $item->issued_at }}" />
                                             </x-table.td>
 
                                             <x-table.td class="w-3/12" hidden-mobile>
@@ -270,11 +256,7 @@
                                             </x-table.td>
 
                                             <x-table.td class="w-4/12 lg:w-3/12">
-                                                <x-slot name="first">
-                                                    {{ $item->contact_name }}
-                                                </x-slot>
-
-                                                <x-slot name="second" class="w-20 font-normal group" data-tooltip-target="tooltip-information-{{ $item->id }}" data-tooltip-placement="left" override="class,data-tooltip-target,data-tooltip-placement">
+                                                <span class="w-20 font-normal group" data-tooltip-target="tooltip-information-{{ $item->id }}" data-tooltip-placement="left">
                                                     <span class="border-black border-b border-dashed">
                                                         {{ $item->document_number }}
                                                     </span>
@@ -282,7 +264,7 @@
                                                     <div class="w-28 absolute h-10 -left-10 -mt-6"></div>
 
                                                     <x-documents.index.information :document="$item" />
-                                                </x-slot>
+                                                </span>
                                             </x-table.td>
 
                                             <x-table.td class="w-4/12 lg:w-3/12" kind="amount">

@@ -16,6 +16,21 @@ class MessageSelector
      */
     public function choose($line, $number, $locale)
     {
+        if (is_array($line)) {
+            $pluralIndex = $this->getPluralIndex($locale, $number);
+            if (isset($line[$pluralIndex])) {
+                return $line[$pluralIndex];
+            } elseif (isset($line['other'])) {
+                return $line['other'];
+            } else {
+                return is_string($line[0] ?? null) ? $line[0] : 'Array';
+            }
+        }
+
+        if (!is_string($line)) {
+            return $line;
+        }
+
         $segments = explode('|', $line);
 
         if (($value = $this->extract($segments, $number)) !== null) {
