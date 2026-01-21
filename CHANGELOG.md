@@ -1,4 +1,3 @@
-- January 22, 2026 at 02:27 AM: Yohh
 - January 22, 2026 at 02:21 AM: Worked on Changelog Format
 - January 21, 2026 at 11:45 PM: Created Changelog for tracking updates
 - January 21, 2026 at 10:30 PM: Fixed Employee creation error
