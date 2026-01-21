@@ -5,3 +5,4 @@
 - 20th January: Added customer search by phone number
 - 20th January: Fixed cancel on hold button
 - 4b7be5d287870189caaf1680fba17aef1047d40c: Test changelog hook (2026-01-21 20:14:04)
+- January 22, 2026 at 02:21 AM: Worked on Changelog Format
