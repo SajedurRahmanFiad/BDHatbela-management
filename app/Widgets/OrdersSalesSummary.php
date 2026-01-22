@@ -83,11 +83,16 @@ class OrdersSalesSummary extends Widget
             ->whereBetween('issued_at', [$this->start_date, $this->end_date])
             ->count();
 
-        // Total sales: only completed (paid) invoices in the period
-        $total_sales_amount = Document::invoice()
-            ->where('status', 'paid')
-            ->whereBetween('issued_at', [$this->start_date, $this->end_date])
-            ->sum('amount');
+        // Total sales: income from sales category
+        $sales_category_id = setting('default.income_category');
+        $total_sales_amount = Transaction::income()
+            ->where('category_id', $sales_category_id)
+            ->whereBetween('paid_at', [$this->start_date, $this->end_date])
+            ->isNotTransfer()
+            ->get()
+            ->sum(function ($transaction) {
+                return $transaction->getAmountConvertedToDefault();
+            });
 
         // Total purchases: completed (paid) bills in the period
         $total_purchases_amount = Document::bill()

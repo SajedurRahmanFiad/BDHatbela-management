@@ -1,3 +1,5 @@
+- January 22, 2026 at 11:15 PM: Fixed Import-Export options
+
 - January 22, 2026 at 10:51 PM: Fixed phone number searching issue
 
 - January 21, 2026 at 11:32 PM: Fixed User Creation Issues, now the admin creates the password for employees

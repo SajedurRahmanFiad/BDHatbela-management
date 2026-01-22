@@ -25,7 +25,7 @@ return [
     'total_expenses'            => 'Total Expenses',
 
     'includes_draft_sent_paid'  => 'Includes all orders till now',
-    'revenue_from_invoices'     => 'Revenue from orders',
+    'revenue_from_invoices'     => 'Income from sales category',
     'sales_minus_expenses'      => 'Incoming minus outgoing',
     'purchases_from_bills'      => 'Purchases from bills',
     'other_expenses_plus_shipping' => 'Includes shipping costs',

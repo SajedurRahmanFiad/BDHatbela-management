@@ -9,16 +9,20 @@ use App\Jobs\Banking\CreateTransaction;
 use App\Jobs\Document\CreateDocumentHistory;
 use App\Events\Document\PaidAmountCalculated;
 use App\Interfaces\Job\ShouldCreate;
+use App\Models\Banking\Account;
 use App\Models\Banking\Transaction;
 use App\Models\Document\Document;
+use App\Models\Setting\Category;
 use App\Traits\Currencies;
 use App\Utilities\Date;
+use App\Utilities\TransactionNumber;
 
 class CreateBankingDocumentTransaction extends Job implements ShouldCreate
 {
     use Currencies;
 
     protected $transaction;
+    protected $received;
 
     public function __construct(Document $model, $request)
     {
@@ -29,9 +33,14 @@ class CreateBankingDocumentTransaction extends Job implements ShouldCreate
 
     public function handle(): Transaction
     {
+        $previous_paid = $this->model->paid;
+
         event(new DocumentTransactionCreating($this->model, $this->request));
 
         $this->prepareRequest();
+
+        $this->received = $this->request['amount'];
+        $this->request['amount'] = $this->model->amount;
 
         $this->checkAmount();
 
@@ -42,6 +51,48 @@ class CreateBankingDocumentTransaction extends Job implements ShouldCreate
 
             $this->createHistory();
         });
+
+        // Check if payment is partial and create shipping expense
+        $new_paid = $previous_paid + $this->received;
+        if ($new_paid < $this->model->amount) {
+            $difference = $this->model->amount - $this->received;
+
+            $cash_account = Account::where('name', 'Cash')->where('company_id', $this->model->company_id)->first();
+            if (!$cash_account) {
+                $cash_account = Account::find(setting('default.account'));
+            }
+            $shipping_category = Category::where('name', 'Shipping Costs')->where('company_id', $this->model->company_id)->first();
+            if (!$shipping_category) {
+                // Create the category if not exists
+                $shipping_category = Category::create([
+                    'company_id' => $this->model->company_id,
+                    'name' => 'Shipping Costs',
+                    'type' => 'expense',
+                    'color' => '#ff0000', // some color
+                    'enabled' => 1,
+                ]);
+            }
+
+            if ($cash_account && $shipping_category) {
+                $expense_request = [
+                    'type' => 'expense',
+                    'company_id' => $this->model->company_id,
+                    'paid_at' => Date::now()->toDateTimeString(),
+                    'amount' => $difference,
+                    'account_id' => $cash_account->id,
+                    'payment_method' => 'Cash',
+                    'category_id' => $shipping_category->id,
+                    'currency_code' => $this->model->currency_code,
+                    'currency_rate' => $this->model->currency_rate,
+                    'description' => 'Shipping cost for invoice ' . $this->model->document_number,
+                    'number' => app(TransactionNumber::class)->getNextNumber('expense', '', null),
+                    'created_from' => 'core::ui',
+                    'created_by' => 1, // assuming admin
+                ];
+
+                $this->dispatch(new CreateTransaction($expense_request));
+            }
+        }
 
         event(new DocumentTransactionCreated($this->model, $this->transaction));
 
@@ -94,19 +145,11 @@ class CreateBankingDocumentTransaction extends Job implements ShouldCreate
         unset($this->model->reconciled);
         unset($this->model->paid_amount);
 
-        $compare = bccomp($amount, $total_amount, $precision);
+        $received_rounded = round($this->received, $precision);
+        $compare = bccomp($received_rounded, $total_amount, $precision);
 
-        if ($compare === 1) {
-            if ($this->model->currency_code == $code) {
-                $message = trans('messages.error.over_payment', ['amount' => money($total_amount, $code)]);
-
-                throw new \Exception($message);
-            } else {
-                $this->model->status = 'paid';
-            }
-        } else {
-            $this->model->status = ($compare === 0) ? 'paid' : 'partial';
-        }
+        // Always set status to 'paid' after any payment
+        $this->model->status = 'paid';
 
         return true;
     }
