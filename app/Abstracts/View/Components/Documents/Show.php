@@ -497,6 +497,9 @@ abstract class Show extends Component
         $this->hideContactAddress = $hideContactAddress;
         $this->hideContactTaxNumber = $hideContactTaxNumber;
         $this->hideContactPhone = $hideContactPhone;
+        if ($this->type === 'invoice') {
+            $this->hideContactPhone = true;
+        }
         $this->hideContactEmail = $hideContactEmail;
         $this->hideOrderNumber = $hideOrderNumber;
         $this->hideDocumentNumber = $hideDocumentNumber;

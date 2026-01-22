@@ -20,9 +20,10 @@ class Contact extends Component
 
     public $searchRoute;
 
+    public $selectedContact;
+
     public $createRoute;
 
-    /** @var string */
     public $textAddContact;
 
     /** @var string */
@@ -91,21 +92,18 @@ class Contact extends Component
         // No need for dropdownContacts anymore - the model handles the display
         $this->dropdownContacts = $this->contacts;
 
-        // Set display_name for dropdown display
-        foreach ($this->dropdownContacts as $contact) {
-            if ($contact instanceof Model) {
-                $contact->display_name = $contact->name; // This will use the modified name with phone
-            } else {
-                $contact->display_name = $contact->name ?? '';
-            }
-        }
-
         // Ensure selected contact has clean name
         if (!empty($this->contact) && !is_null($originalSelectedName)) {
             $this->contact->name = $originalSelectedName;
         }
 
         // Don't modify the selected contact - it should show the normal name
+
+        $this->selectedContact = $this->contact;
+        if ($this->selectedContact && $this->type === 'customer') {
+            $this->selectedContact = clone $this->contact;
+            unset($this->selectedContact->phone);
+        }
 
         if (empty($this->searchRoute)) {
             switch ($this->type) {

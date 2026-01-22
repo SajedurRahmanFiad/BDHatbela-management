@@ -5,7 +5,7 @@
     search-route="{{ $searchRoute }}"
     create-route="{{ $createRoute }}"
     :contacts="{{ json_encode($dropdownContacts ?? $contacts) }}"
-    :selected="{{ json_encode($contact) }}"
+    :selected="{{ json_encode($selectedContact) }}"
     option-field="display_name"
     add-contact-text="{{ is_array($textAddContact) ? trans($textAddContact[0], ['field' => trans_choice($textAddContact[1], 1)]) : trans($textAddContact) }}"
     create-new-contact-text="{{ is_array($textCreateNewContact) ? trans($textCreateNewContact[0], ['field' => trans_choice($textCreateNewContact[1], 1)]) : trans($textCreateNewContact) }}"

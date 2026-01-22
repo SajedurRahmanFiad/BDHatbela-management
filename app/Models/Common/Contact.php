@@ -38,7 +38,7 @@ class Contact extends Model
      *
      * @var array
      */
-    protected $appends = ['location', 'logo', 'initials', 'has_email'];
+    protected $appends = ['location', 'logo', 'initials', 'has_email', 'display_name'];
 
     /**
      * Attributes that should be mass-assignable.
@@ -429,6 +429,20 @@ class Contact extends Model
         } catch (\Exception $e) {}
 
         return $actions;
+    }
+
+    /**
+     * Get the display name attribute.
+     *
+     * @return string
+     */
+    public function getDisplayNameAttribute()
+    {
+        if ($this->type === 'customer') {
+            return $this->name . ($this->phone ? ' (' . $this->phone . ')' : '');
+        }
+
+        return $this->name;
     }
 
     /**
