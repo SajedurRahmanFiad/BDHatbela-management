@@ -1,3 +1,5 @@
+- January 23, 2026 at 05:42 AM: Implemented automatic shipping cost calculation and made major adjustments to the financial calculation
+
 - January 22, 2026 at 11:15 PM: Fixed Import-Export options
 
 - January 22, 2026 at 10:51 PM: Fixed phone number searching issue
