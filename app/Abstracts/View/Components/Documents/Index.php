@@ -337,11 +337,6 @@ abstract class Index extends Component
         $this->hideImport = $hideImport;
         $this->hideExport = $hideExport;
 
-        if (!auth()->check() || !auth()->user()->hasRole('Admin')) {
-            $this->hideImport = true;
-            $this->hideExport = true;
-        }
-
         $this->createRoute = $this->getCreateRoute($type, $createRoute);
         $this->importRoute = $this->getImportRoute($importRoute);
         $this->importRouteParameters = $this->getImportRouteParameters($type, $importRouteParameters);
