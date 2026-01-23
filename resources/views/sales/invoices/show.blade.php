@@ -9,6 +9,9 @@
             @if ($invoice->histories->where('status', 'steadfast_sent')->first() && !in_array($invoice->status, ['paid', 'picked', 'cancelled']))
                 <img src="{{ asset('public/img/steadfast.png') }}" alt="Steadfast" title="Added to Steadfast" class="w-5 h-5 ml-2" />
             @endif
+            @if ($invoice->histories->where('status', 'carrybee_sent')->first() && !in_array($invoice->status, ['paid', 'picked', 'cancelled']))
+                <img src="{{ asset('public/img/carrybee.png') }}" alt="CarryBee" title="Added to CarryBee" class="w-5 h-5 ml-2" />
+            @endif
         </div>
     </x-slot>
 

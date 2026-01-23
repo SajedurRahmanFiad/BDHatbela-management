@@ -16,6 +16,7 @@ use App\Jobs\Document\UpdateDocument;
 use App\Models\Document\Document;
 use App\Traits\Documents;
 use SteadFast\SteadFastCourierLaravelPackage\Facades\SteadfastCourier;
+// use CarryBee\CarryBeeCourierLaravelPackage\Facades\CarryBeeCourier; // Uncomment if CarryBee package exists
 
 class Invoices extends Controller
 {
@@ -373,51 +374,15 @@ class Invoices extends Controller
      */
     public function sendToSteadfast(Document $invoice)
     {
-        $orderData = [
-            'invoice' => $invoice->document_number,
-            'recipient_name' => $invoice->contact->name,
-            'recipient_phone' => $invoice->contact->phone,
-            'recipient_address' => $invoice->contact->address . ', ' . $invoice->contact->city . ', ' . $invoice->contact->zip_code . ', ' . $invoice->contact->state . ', ' . $invoice->contact->country,
-            'cod_amount' => ceil($invoice->amount),
-            'note' => $invoice->notes ?: ''
-        ];
+        // Placeholder for Steadfast backend logic
+        flash('Steadfast integration placeholder - no action taken.')->info();
+        return redirect()->back();
+    }
 
-        \Log::info('Steadfast Order Data Prepared', $orderData);
-
-        try {
-            $response = SteadfastCourier::placeOrder($orderData);
-
-            \Log::info('Steadfast API Response', ['response' => $response]);
-
-            if (isset($response['status']) && $response['status'] == 200) {
-                $invoice->histories()->create([
-                    'company_id' => $invoice->company_id,
-                    'type' => $invoice->type,
-                    'status' => 'steadfast_sent',
-                    'notify' => 0,
-                    'description' => 'Added to Steadfast Courier',
-                    'created_by' => auth()->id(),
-                ]);
-
-                $message = 'Order added to Steadfast Courier successfully.';
-                flash($message)->success();
-                \Log::info('Steadfast order added successfully', ['invoice_id' => $invoice->id, 'invoice_number' => $invoice->document_number]);
-            } else {
-                $errorMessage = isset($response['message']) ? $response['message'] : 'Unknown error occurred while adding to Steadfast.';
-                flash($errorMessage)->error();
-                \Log::error('Steadfast API returned error', ['response' => $response, 'invoice_id' => $invoice->id]);
-            }
-        } catch (\Exception $e) {
-            $errorMsg = 'Error: ' . $e->getMessage();
-            flash($errorMsg)->error();
-            \Log::error('Steadfast API call failed', [
-                'error' => $e->getMessage(),
-                'invoice_id' => $invoice->id,
-                'order_data' => $orderData,
-                'trace' => $e->getTraceAsString()
-            ]);
-        }
-
+    public function sendToCarryBee(Document $invoice)
+    {
+        // Placeholder for CarryBee backend logic
+        flash('CarryBee integration placeholder - no action taken.')->info();
         return redirect()->back();
     }
 }

@@ -8,14 +8,77 @@
         } else if (old('items')) {
             $document_items = json_encode(old('items'));
         }
+
+        $is_document_page = in_array(request()->route()->getName(), [
+            'sales.invoices.show',
+            'sales.invoices.edit',
+            'purchases.bills.show',
+            'purchases.bills.edit',
+            'sales.invoices.index',
+            'purchases.bills.index',
+            // Add other document routes as needed
+        ]);
     @endphp
 
+    <script type="text/javascript">
+        var document_app_env = '{{ $document_app_env }}';
+
+        function onAddToCarryBee(invoiceId) {
+            console.log('Working, yaaayyy', invoiceId);
+
+            fetch(`{{ url("/api/carrybee/cities") }}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(data => {
+                console.log('API response:', data);
+                console.log('Cities data:', data.data);
+                console.log('Data type:', typeof data, 'Is array:', Array.isArray(data), 'Length:', data ? data.length : 'N/A');
+
+                // Fetch zones for city ID 5 for debugging
+                const cityId = 14;
+                console.log('Fetching zones for cityId:', cityId);
+                fetch(`{{ url("/api/carrybee/cities") }}/${cityId}/zones`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(res => {
+                    console.log('Zones fetch response status:', res.status);
+                    if (!res.ok) {
+                        throw new Error(`HTTP ${res.status}`);
+                    }
+                    return res.json();
+                })
+                .then(zones => {
+                    console.log('Zones response:', zones);
+                })
+                .catch(err => {
+                    console.error('Zones API error:', err);
+                });
+            })
+            .catch(err => {
+                console.error('API error:', err);
+            });
+        }
+
+    </script>
+
+    @if ($is_document_page)
     <script type="text/javascript">
         var document_items = {!! $document_items !!};
         var document_default_currency = '{{ $currency_code }}';
         var document_currencies = {!! $currencies !!};
         var document_taxes = {!! $taxes !!};
-        var document_app_env = '{{ $document_app_env }}';
 
         if (typeof aka_currency !== 'undefined') {
             aka_currency = {!! json_encode(! empty($document) ? $document->currency : config('money.currencies.' . company()->currency)) !!};
@@ -134,41 +197,15 @@
             }
 
             console.log('Sending request to /api/steadfast-courier/send-order');
-            
-            // Send request to backend
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/api/steadfast-courier/send-order', true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '');
+        }
 
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    console.log('XHR response received. Status:', xhr.status);
-                    if (xhr.status === 200) {
-                        var response = JSON.parse(xhr.responseText);
-                        console.log('Steadfast Courier Response:', response);
-                        alert('Order sent to Steadfast Courier!');
-                    } else {
-                        alert('Error sending order: ' + xhr.status);
-                        console.error('Error response:', xhr.responseText);
-                    }
-                }
-            };
-
-            xhr.onerror = function() {
-                console.error('XHR error occurred');
-                alert('Network error occurred');
-            };
-
-            console.log('Sending data:', JSON.stringify({
-                invoice_id: invoiceId
-            }));
-
-            xhr.send(JSON.stringify({
-                invoice_id: invoiceId
-            }));
+        // Placeholder front-end handler for Steadfast (no backend action)
+        function onSendSteadfastPlaceholder(invoiceId) {
+            console.log('Steadfast placeholder clicked for invoice:', invoiceId);
+            alert('Steadfast placeholder — no action taken.');
         }
     </script>
+    @endif
 @endpush
 
 <x-script :alias="$alias" :folder="$folder" :file="$file" />

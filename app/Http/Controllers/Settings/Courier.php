@@ -9,6 +9,33 @@ class Courier extends SettingController
 {
     public function edit()
     {
+        // Initialize settings from .env if not set
+        if (!setting('courier.steadfast.base_url')) {
+            setting()->set('courier.steadfast.base_url', env('STEADFAST_BASE_URL'));
+        }
+        if (!setting('courier.steadfast.api_key')) {
+            setting()->set('courier.steadfast.api_key', env('STEADFAST_API_KEY'));
+        }
+        if (!setting('courier.steadfast.secret_key')) {
+            setting()->set('courier.steadfast.secret_key', env('STEADFAST_SECRET_KEY'));
+        }
+        if (!setting('courier.carrybee.base_url')) {
+            setting()->set('courier.carrybee.base_url', env('CARRYBEE_BASE_URL'));
+        }
+        if (!setting('courier.carrybee.client_id')) {
+            setting()->set('courier.carrybee.client_id', env('CARRYBEE_CLIENT_ID'));
+        }
+        if (!setting('courier.carrybee.client_secret')) {
+            setting()->set('courier.carrybee.client_secret', env('CARRYBEE_CLIENT_SECRET'));
+        }
+        if (!setting('courier.carrybee.client_context')) {
+            setting()->set('courier.carrybee.client_context', env('CARRYBEE_CLIENT_CONTEXT'));
+        }
+        if (!setting('courier.carrybee.store_id')) {
+            setting()->set('courier.carrybee.store_id', env('CARRYBEE_STORE_ID'));
+        }
+        setting()->save();
+
         return view('settings.courier.edit');
     }
 
@@ -40,8 +67,9 @@ class Courier extends SettingController
         if (isset($fields['carrybee_client_context'])) {
             setting()->set('courier.carrybee.client_context', $fields['carrybee_client_context']);
         }
-
-        // Save all settings
+        if (isset($fields['carrybee_store_id'])) {
+            setting()->set('courier.carrybee.store_id', $fields['carrybee_store_id']);
+        }
         setting()->save();
 
         // Update .env file with the new settings
@@ -65,6 +93,7 @@ class Courier extends SettingController
         $carrybeeClientId = setting('courier.carrybee.client_id') ?? '';
         $carrybeeClientSecret = setting('courier.carrybee.client_secret') ?? '';
         $carrybeeClientContext = setting('courier.carrybee.client_context') ?? '';
+        $carrybeeStoreId = setting('courier.carrybee.store_id') ?? '';
 
         // Read current .env file
         $envFile = base_path('.env');
@@ -79,6 +108,7 @@ class Courier extends SettingController
         $envContent = preg_replace('/CARRYBEE_CLIENT_ID=.*/', 'CARRYBEE_CLIENT_ID="' . $carrybeeClientId . '"', $envContent);
         $envContent = preg_replace('/CARRYBEE_CLIENT_SECRET=.*/', 'CARRYBEE_CLIENT_SECRET="' . $carrybeeClientSecret . '"', $envContent);
         $envContent = preg_replace('/CARRYBEE_CLIENT_CONTEXT=.*/', 'CARRYBEE_CLIENT_CONTEXT="' . $carrybeeClientContext . '"', $envContent);
+        $envContent = preg_replace('/CARRYBEE_STORE_ID=.*/', 'CARRYBEE_STORE_ID="' . $carrybeeStoreId . '"', $envContent);
 
         // Write back to .env
         file_put_contents($envFile, $envContent);

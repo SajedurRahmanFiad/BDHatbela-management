@@ -1,3 +1,5 @@
+- January 23, 2026 at 06:14 AM: Fixed invoice printing layout. Now click Print > Select 2 pages per sheet, and voila!
+
 - January 23, 2026 at 05:42 AM: Implemented automatic shipping cost calculation and made major adjustments to the financial calculation
 
 - January 22, 2026 at 11:15 PM: Fixed Import-Export options

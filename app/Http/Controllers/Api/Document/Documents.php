@@ -9,6 +9,7 @@ use App\Jobs\Document\CreateDocument;
 use App\Jobs\Document\DeleteDocument;
 use App\Jobs\Document\UpdateDocument;
 use App\Models\Document\Document;
+use Illuminate\Support\Facades\Http;
 
 class Documents extends ApiController
 {
@@ -115,5 +116,40 @@ class Documents extends ApiController
         } catch(\Exception $e) {
             $this->errorUnauthorized($e->getMessage());
         }
+    }
+
+    /**
+     * Get cities from CarryBee API.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCarryBeeCities()
+    {
+        $response = Http::withHeaders([
+            'Client-ID' => env('CARRYBEE_CLIENT_ID'),
+            'Client-Secret' => env('CARRYBEE_CLIENT_SECRET'),
+            'Client-Context' => env('CARRYBEE_CLIENT_CONTEXT'),
+            'Accept' => 'application/json',
+        ])->get(env('CARRYBEE_BASE_URL') . '/api/v2/cities');
+
+        return response()->json($response->json());
+    }
+
+    /**
+     * Get zones for a city from CarryBee API.
+     *
+     * @param string $city_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCarryBeeZones($city_id)
+    {
+        $response = Http::withHeaders([
+            'Client-ID' => env('CARRYBEE_CLIENT_ID'),
+            'Client-Secret' => env('CARRYBEE_CLIENT_SECRET'),
+            'Client-Context' => env('CARRYBEE_CLIENT_CONTEXT'),
+            'Accept' => 'application/json',
+        ])->get(env('CARRYBEE_BASE_URL') . '/api/v2/cities/' . $city_id . '/zones');
+
+        return response()->json($response->json());
     }
 }

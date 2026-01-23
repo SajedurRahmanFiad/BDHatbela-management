@@ -76,6 +76,7 @@ Route::group(['prefix' => 'sales'], function () {
     Route::get('invoices/{invoice}/restore', 'Sales\Invoices@restoreInvoice')->name('invoices.restore');
     Route::get('invoices/{invoice}/email', 'Sales\Invoices@emailInvoice')->name('invoices.email');
     Route::get('invoices/{invoice}/send-to-steadfast', 'Sales\Invoices@sendToSteadfast')->name('invoices.send-to-steadfast');
+    Route::get('invoices/{invoice}/send-to-carrybee', 'Sales\Invoices@sendToCarryBee')->name('invoices.send-to-carrybee');
     Route::get('invoices/{invoice}/print', 'Sales\Invoices@printInvoice')->name('invoices.print');
     Route::get('invoices/{invoice}/pdf', 'Sales\Invoices@pdfInvoice')->name('invoices.pdf');
     Route::get('invoices/{invoice}/duplicate', 'Sales\Invoices@duplicate')->name('invoices.duplicate');

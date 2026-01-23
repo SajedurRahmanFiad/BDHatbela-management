@@ -690,14 +690,29 @@ class Document extends Model
                 } catch (\Exception $e) {}
 
                 try {
+                    // Front-end placeholder buttons (do not trigger backend by default)
                     if ($this->type == 'invoice' && $this->status == 'sent' && ! $this->histories->where('status', 'steadfast_sent')->first()) {
                         $actions[] = [
+                            'type' => 'button',
                             'title' => 'Add to steadfast',
                             'icon' => 'local_shipping',
-                            'url' => route($prefix . '.send-to-steadfast', $this->id),
                             'permission' => 'read-' . $group . '-' . $permission_prefix,
                             'attributes' => [
                                 'id' => 'index-line-actions-send-to-steadfast-' . $this->type . '-'  . $this->id,
+                                '@click' => 'onSendSteadfastPlaceholder(' . $this->id . ')',
+                            ],
+                        ];
+                    }
+
+                    if ($this->type == 'invoice' && $this->status == 'sent' && ! $this->histories->where('status', 'carrybee_sent')->first()) {
+                        $actions[] = [
+                            'type' => 'button',
+                            'title' => 'Add to CarryBee',
+                            'icon' => 'local_shipping',
+                            'permission' => 'read-' . $group . '-' . $permission_prefix,
+                            'attributes' => [
+                                'id' => 'index-line-actions-send-to-carrybee-' . $this->type . '-'  . $this->id,
+                                '@click' => 'onAddToCarryBee(' . $this->id . ')',
                             ],
                         ];
                     }

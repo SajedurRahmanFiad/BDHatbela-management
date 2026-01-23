@@ -41,8 +41,14 @@
             @endif
 
             @if ($document->type == 'invoice' && $document->status == 'sent' && !$document->histories->where('status', 'steadfast_sent')->first() && !(user() && user()->isEmployee()))
-                <x-link href="{{ route('invoices.send-to-steadfast', $document->id) }}" id="show-more-actions-send-to-steadfast-{{ $document->type }}">
+                <x-link href="#" id="show-more-actions-send-to-steadfast-{{ $document->type }}" @click.prevent="onSendSteadfastPlaceholder({{ $document->id }})">
                     Add to Steadfast
+                </x-link>
+            @endif
+
+            @if ($document->type == 'invoice' && $document->status == 'sent' && !$document->histories->where('status', 'carrybee_sent')->first() && !(user() && user()->isEmployee()))
+                <x-link href="javascript:void(0)" id="show-more-actions-send-to-carrybee-{{ $document->type }}" onclick="onAddToCarryBee({{ $document->id }})">
+                    Add to CarryBee
                 </x-link>
             @endif
 
@@ -50,7 +56,7 @@
 
             @stack('timeline_send_body_history_start')
 
-            @php $allHistories = $document->histories->whereIn('status', ['sent', 'steadfast_sent'])->sortBy('created_at'); @endphp
+            @php $allHistories = $document->histories->whereIn('status', ['sent', 'steadfast_sent', 'carrybee_sent'])->sortBy('created_at'); @endphp
             @if ($allHistories->count())
                 <div class="text-xs mt-6" style="margin-left: 0 !important;">
                     <span class="font-medium">
@@ -62,8 +68,10 @@
                             <span>
                                 @if($history->status == 'sent')
                                     {{ $history->owner->name }} added this {{ $type_lowercase }} for processing on {{ company_date($history->created_at) }} at {{ $history->created_at->format('h:i A') }}
-                                @else
+                                @elseif($history->status == 'steadfast_sent')
                                     {{ $history->owner->name }} added this {{ $type_lowercase }} to Steadfast on {{ company_date($history->created_at) }} at {{ $history->created_at->format('h:i A') }}
+                                @elseif($history->status == 'carrybee_sent')
+                                    {{ $history->owner->name }} added this {{ $type_lowercase }} to CarryBee on {{ company_date($history->created_at) }} at {{ $history->created_at->format('h:i A') }}
                                 @endif
                             </span>
                         </div>

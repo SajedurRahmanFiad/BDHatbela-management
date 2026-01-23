@@ -42,6 +42,7 @@
 
 
     <x-slot name="content">
+        <div id="items" style="display: none;"></div>
         <div class="flex flex-col lg:flex-row justify-between items-start border-b pt-8">
             <div class="flex">
                 {{-- Multiple dashboards removed — only a single fixed dashboard is used. --}}

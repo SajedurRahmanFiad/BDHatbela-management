@@ -31,6 +31,8 @@
                         <x-form.group.text name="carrybee_client_secret" label="Client Secret" value="{{ setting('courier.carrybee.client_secret') }}" not-required />
 
                         <x-form.group.text name="carrybee_client_context" label="Client Context" value="{{ setting('courier.carrybee.client_context') }}" not-required />
+
+                        <x-form.group.text name="carrybee_store_id" label="Store ID" value="{{ setting('courier.carrybee.store_id') }}" not-required />
                     </x-slot>
                 </x-form.section>
 
