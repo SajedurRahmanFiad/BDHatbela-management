@@ -45,7 +45,7 @@
             }
 
             .print-template p {
-                line-height: 0.4 !important;
+                line-height: normal !important;
             }
 
             .contact-name {

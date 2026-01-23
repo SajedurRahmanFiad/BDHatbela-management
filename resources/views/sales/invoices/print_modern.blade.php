@@ -8,5 +8,10 @@
             type="invoice"
             :document="$invoice"
         />
+        <div style="page-break-after: always;"></div>
+        <x-documents.template.modern
+            type="invoice"
+            :document="$invoice"
+        />
     </x-slot>
 </x-layouts.print>
