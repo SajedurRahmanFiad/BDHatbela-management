@@ -1,3 +1,10 @@
+<label for="contact" class="block text-sm font-medium text-gray-700 mb-2 flex justify-between items-center">
+    <span>{{ $labelText }}</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="const el = this.closest('label').nextElementSibling; if (el && el.__vue__ && typeof el.__vue__.onContactCreate === 'function') { el.__vue__.onContactCreate(); }">
+        + New
+    </button>
+</label>
+
 <akaunting-contact-card
     placeholder="{{ $placeholder }}"
     no-data-text="{{ trans('general.no_data') }}"

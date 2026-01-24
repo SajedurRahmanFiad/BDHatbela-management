@@ -41,6 +41,8 @@ class Contact extends Component
     /** @var $error  */
     public $error;
 
+    public $labelText;
+
     /**
      * Create a new component instance.
      *
@@ -51,6 +53,7 @@ class Contact extends Component
         $textAddContact = '', $textCreateNewContact = '', $textEditContact = '', $textContactInfo = '', $textChooseDifferentContact = ''
     ) {
         $this->type = $type;
+        $this->labelText = trans_choice('general.' . Str::plural($this->type), 1);
         $this->contact = $contact;
         $this->contacts = $contacts;
         $this->searchRoute = $searchRoute;

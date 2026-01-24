@@ -1,3 +1,5 @@
+- January 24, 2026 at 03:59 AM: Fixed minor bugs and implemented CarryBee button
+
 - January 23, 2026 at 06:14 AM: Fixed invoice printing layout. Now click Print > Select 2 pages per sheet, and voila!
 
 - January 23, 2026 at 05:42 AM: Implemented automatic shipping cost calculation and made major adjustments to the financial calculation
